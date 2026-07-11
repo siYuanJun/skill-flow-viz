@@ -76,7 +76,7 @@
             <dt>产出</dt><dd>代码文件、测试报告、任务日志（logs/TASK-XXX.md）、模块闭环文档（flow/design/summary/checklist 四份）</dd>
             <dt>门控</dt><dd>每模块：展示规格 → 🛑 确认 → 开发 → 自审 → 测试 → 熔断检查 → 闭环 → 日志；严禁跨模块。闭环后 🛑 暂停，人工确认通过才解锁下一模块。</dd>
           </dl>
-          <div class="step-note"><b>熔断器</b>：同一任务重试 ≤ 3 次，超过触发熔断、标记 ❌ 受阻，等待人工决策。日志不完整视为任务未完成（不得标 ✅）。</div>
+          <div class="step-note"><b>熔断器</b>：同一任务重试 ≤ 3 次，超过触发熔断、标记「受阻」，等待人工决策。日志不完整视为任务未完成（不得标「完成」）。</div>
         </div>
       </details>
       <details class="step">

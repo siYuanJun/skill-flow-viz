@@ -337,6 +337,18 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
 .cover-table code { font-family: 'Orbitron', monospace; font-size: 12.5px; color: var(--secondary); }
 .cover-table tr:hover td { background: rgba(139, 92, 246, 0.05); }
 .cover-yes { color: var(--success); font-weight: 600; white-space: nowrap; }
+.cover-yes::before {
+  content: "";
+  display: inline-block;
+  width: 6px; height: 11px;
+  margin-right: 9px;
+  border-right: 2px solid var(--success);
+  border-bottom: 2px solid var(--success);
+  transform: rotate(45deg);
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+}
 
 .cover-note {
   border-left: 3px solid var(--primary);
@@ -616,6 +628,43 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
         <div class="sc-desc">AI 数字员工平台：产品定位 / 五层架构 / 技术选型 / 多智能体编排 / 行业合规（金融·央企·政企·法律）与私有化部署</div>
       </a>
     </div>
+
+    <!-- 落地场景 × 可实施的产品价值 -->
+    <div class="industry-value reveal reveal-delay-2" style="margin-top:52px;">
+      <div class="section-title" style="margin-bottom:10px;">06-1 · 落地场景 × 可实施的产品价值</div>
+      <div class="layer-heading" style="font-size:22px;margin-bottom:6px;">这套工程底座，实施后能产出什么</div>
+      <p class="section-sub" style="margin-bottom:28px;max-width:880px;">行业方案层不是两个孤立 Skill，而是这套工程集群「<strong>可被实施、能产生真实产品价值</strong>」的证明层。下表按「落地场景（行业 / Agent 应用形态）→ 实施后能交付的产品价值形式 → 核心支撑 Skill」给出映射——所有能力均已在多个真实生产项目中完整实践验证，并非概念假设：</p>
+
+      <table class="cover-table">
+        <thead>
+          <tr><th>落地场景（行业 / Agent 应用形态）</th><th>实施后能产出的产品价值形式</th><th>核心支撑 Skill</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>受监管行业智能体平台<span class="ct-sub">金融 / 央企 / 政企 / 法律</span></td>
+            <td>可运行的多智能体数字员工（Governed 模式）+ 产品级 PRD、五层架构图、技术栈矩阵、实施路线图（POC→Scale→Eco）、Agent 技能目录、评估看板；满足信创 / 等保 / 国密与全审计</td>
+            <td><code>ai-digital-employee</code> · <code>docker-container-design</code> · <code>meta-agent-collaboration</code></td>
+          </tr>
+          <tr>
+            <td>任意软件系统的全生命周期工程自动化</td>
+            <td>可运行系统 + 全套工程过程资产（需求文档 / 测试报告 / 排障复盘 / 个人 playbook）+ 统一治理标准（Governance≥90、Token≤1000）</td>
+            <td><code>UEP</code> · <code>AI Dev Workflow</code> · 排障修复层 · <code>meta-self-iteration</code></td>
+          </tr>
+          <tr>
+            <td>已有代码库的能力复用与知识沉淀</td>
+            <td>代码知识图谱（40+ 语言 AST 本地解析，零 API 成本）+ 结构化项目价值文档 + 跨项目可复用 playbook</td>
+            <td><code>graphify</code> · <code>project-cv-generator</code> · <code>meta-self-iteration</code></td>
+          </tr>
+          <tr>
+            <td>可信赖交付（防幻觉 / 可审计）</td>
+            <td>可独立验证的测试脚本（Python + curl）+ 13 章结构化复盘文档 + 治理指标看板</td>
+            <td><code>api-test-harness</code> · <code>test-microservice-python</code> · <code>doc-troubleshooting</code> · 统一质检验收</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="cover-note reveal" style="margin-top:24px;"><span class="cover-strong">可实施性证据</span>：以上四类落地范式均已在多个真实生产项目完整跑通——从需求理解、并行开发、排障复盘，到私有化部署与全审计，闭环可复现。这证明这套工程思维<strong>不是概念，而是能持续产出具体产品价值的工程能力底座</strong>。</p>
+    </div>
   </div>
 </section>
 
@@ -636,44 +685,44 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
         <tr>
           <td>元工程层<span class="ct-sub">管理 Skill 工程本身</span></td>
           <td><code>project-skill-builder</code>：五大惯例 + 四种设计模式 + 质检闭环，让新窗口 Agent 自动继承工程标准</td>
-          <td class="cover-yes">✅ 已可视化</td>
+          <td class="cover-yes">已可视化</td>
         </tr>
         <tr>
           <td>工程协议层<span class="ct-sub">开发执行引擎</span></td>
           <td><code>UEP</code>（并行多 Agent 协议）+ <code>AI Dev Workflow</code>（串行全栈脚手架，7 步 + 断点续传）</td>
-          <td class="cover-yes">✅ 已可视化</td>
+          <td class="cover-yes">已可视化</td>
         </tr>
         <tr>
           <td>元方法论层<span class="ct-sub">教 AI 怎么做事</span></td>
           <td><code>meta-feature-dev</code>（人类提问）· <code>meta-agent-collaboration</code>（AI 需求分析）· <code>meta-self-iteration</code>（自我进化）</td>
-          <td class="cover-yes">✅ 已可视化</td>
+          <td class="cover-yes">已可视化</td>
         </tr>
         <tr>
           <td>工程过程层<span class="ct-sub">日常开发任务</span></td>
           <td><code>planning-with-files-zh</code>（持久化项目管理）· <code>test-microservice-python</code>（全量测试）· <code>api-test-harness</code>（防幻觉接口测试）</td>
-          <td class="cover-yes">✅ 已可视化</td>
+          <td class="cover-yes">已可视化</td>
         </tr>
         <tr>
           <td>排障修复层<span class="ct-sub">定位与解决问题</span></td>
           <td><code>debug-problem</code>（通用入口）· <code>debug-frontend-param</code> · <code>debug-frontend-404</code> · <code>debug-backend-500</code> · <code>doc-troubleshooting</code>（复盘归档）</td>
-          <td class="cover-yes">✅ 已可视化</td>
+          <td class="cover-yes">已可视化</td>
         </tr>
         <tr>
           <td>基础设施层<span class="ct-sub">容器 / 部署 / 上下文</span></td>
           <td><code>docker-container-design</code>（6 原则容器化）· <code>rag-context-engine</code>（RAG 上下文工程）· <code>graphify</code>（代码图谱）</td>
-          <td class="cover-yes">✅ 已可视化 2/3<br><span class="ct-sub"><code>graphify</code> 见映射文档</span></td>
+          <td class="cover-yes">已可视化 2/3<br><span class="ct-sub"><code>graphify</code> 见映射文档</span></td>
         </tr>
         <tr>
           <td>行业解决方案层<span class="ct-sub">产品级架构交付</span></td>
           <td><code>ai-digital-employee</code>（覆盖金融 / 央企 / 政企 / 法律四垂直领域）· <code>project-cv-generator</code>（项目价值提取工程）</td>
-          <td class="cover-yes">✅ 已可视化</td>
+          <td class="cover-yes">已可视化</td>
         </tr>
       </tbody>
     </table>
 
-    <p class="cover-note reveal"><span class="cover-strong">✅ 闭环完整</span>：七大层次均有活跃 Skill，已形成<strong>需求 → 设计 → 开发 → 测试 → 排障 → 部署 → 沉淀</strong>的完整工程闭环；其中 18 个已在本目录生成可视化单页，无需通读源码即可掌握其执行脉络。</p>
+    <p class="cover-note reveal"><span class="cover-strong">闭环完整</span>：七大层次均有活跃 Skill，已形成<strong>需求 → 设计 → 开发 → 测试 → 排障 → 部署 → 沉淀</strong>的完整工程闭环；其中 18 个已在本目录生成可视化单页，无需通读源码即可掌握其执行脉络。</p>
 
-    <p class="cover-note reveal"><span class="cover-strong">💡 价值所在</span>：每个 Skill 都是一个由 <code>SKILL.md</code> + 脚本 + 策略 + 约束组成的完整「项目体」，而非单一文件；它们共享统一的治理标准（Governance≥85+、Token≤1000）与视觉语言，既可独立使用、也能协同编排，共同构成一套<strong>可复用、可审计、可演进</strong>的 AI 工程能力底座。</p>
+    <p class="cover-note reveal"><span class="cover-strong">价值所在</span>：每个 Skill 都是一个由 <code>SKILL.md</code> + 脚本 + 策略 + 约束组成的完整「项目体」，而非单一文件；它们共享统一的治理标准（Governance≥85+、Token≤1000）与视觉语言，既可独立使用、也能协同编排，共同构成一套<strong>可复用、可审计、可演进</strong>的 AI 工程能力底座。</p>
   </div>
 </section>
 
