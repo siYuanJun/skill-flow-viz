@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ai-digital-employee · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+<style>
+  .tag-new { display:inline-block; margin-left:8px; padding:1px 7px; font-size:11px; line-height:1.6; color:#fff; background:#16a34a; border-radius:10px; vertical-align:middle; font-weight:600; }
+  .fh-node.fh-new { border-color:#16a34a; box-shadow:0 0 0 2px rgba(22,163,74,.18); }
+  .fh-node.fh-new small { color:#16a34a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-industry"><span class="layer-dot"></span>行业方案层</div>
+    <h1 class="doc-title">AI Digital Employee · 数字员工平台</h1>
+    <p class="doc-sub">数字员工（AI 员工 / 智能体平台）工程：覆盖产品思考、架构设计、技术选型、多智能体编排到行业部署（金融·央企·政企·法律）的完整生命周期。按四种模式（Scaffold / Production / Library / Governed）产出 7 类具体工程交付物，而非抽象建议；满足信创、私有化部署与全审计要求。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从竞品分析到评估体系搭建，10 步工作流环环相扣。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（10 步 Workflow）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">00</span> 竞品分析与市场定位</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/competitive-analysis.md</code> 梳理同类数字员工平台的定位与差异点。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> 明确产品定位与 5 级成熟度目标</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/product-understanding.md</code> 锚定产品定位，设定 L1–L5 成熟度目标。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 设计五层架构蓝图</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/architecture-blueprint.md</code> 规划五层架构并选定组件。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 技术选型对比决策</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/technology-stack.md</code> 多方案对比，给出带依据的技术栈推荐。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 行业合规适配</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/industry-adaptation.md</code> 按行业（金融/央企/政企/法律）适配合规要求。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 信创 / 等保 / 国密合规落地</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/compliance-governance.md</code> 落地信创、等保、国密与全审计约束。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">06</span> 分阶段实施路线图</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/development-methodology.md</code> 规划 POC → Scale → Ecosystem 路线。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">07</span> Agent 技能系统设计</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/agent-skill-system.md</code> 设计 Agent 技能目录与 I/O 契约。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">08</span> 多智能体编排选型</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/multi-agent-orchestration.md</code> 选定多智能体编排方案。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">09</span> 评估体系搭建</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/evaluation-framework.md</code> 建立指标与阈值的评估看板。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>数字员工 / AI 员工 / 智能体平台建设</li>
+          <li>多智能体协作、Agent 技能市场设计</li>
+          <li>受监管行业（金融·央企·政企·法律）的合规适配与私有化部署</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>纯 RPA（无 AI 决策能力）</li>
+          <li>简单聊天机器人（无自主任务执行）</li>
+          <li>通用 LLM 提示词工程（无关 Agent 系统）</li>
+          <li>纯 UI 前端设计（无后端 Agent 基建）</li>
+          <li>一次性脚本类非 AI 工作流工具</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物（7 类具体交付物）</h3>
+        <ul>
+          <li>PRD → 架构图 → 技术栈矩阵</li>
+          <li>行业清单 → 路线图（POC→Scale→Ecosystem）</li>
+          <li>Agent 技能目录 → 评估看板</li>
+          <li>原则：文件落盘 + 清单确认才算完成</li>
+        </ul>
+      </div>
+      <div class="card mode">
+        <h3>四大运行模式</h3>
+        <ul>
+          <li><code>Scaffold</code> 单 Agent 原型</li>
+          <li><code>Production</code> 多 Agent 受治理</li>
+          <li><code>Library</code> 模板 / 清单库</li>
+          <li><code>Governed</code> 金融·央企·政企（信创 + 私有化 + 全审计）</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">703</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Prompt</div></div>
+      <div class="metric"><div class="m-val">92</div><div class="m-label">System</div></div>
+      <div class="metric"><div class="m-val">0</div><div class="m-label">Trust 告警</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="../skills/meta-agent-collaboration/">meta-agent-collaboration（多智能体协作）</a>
+      <a href="../skills/rag-context-engine/">rag-context-engine（上下文工程）</a>
+      <a href="../skills/docker-container-design/">docker-container-design（私有化 / 信创部署）</a>
+      <a href="../skills/doc-project-architecture/">doc-project-architecture（架构文档）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '0. 竞品分析', sub: '产出：定位差异' },
+    { label: '1. 产品定位', sub: '产出：L1-L5 目标' },
+    { label: '2. 五层架构', sub: '产出：架构蓝图' },
+    { label: '3. 技术选型', sub: '产出：技术栈矩阵' },
+    { label: '4. 行业合规', sub: '产出：行业清单' },
+    { label: '5. 信创/等保/国密', sub: '产出：合规落地' },
+    { label: '6. 实施路线', sub: '产出：POC→Scale→Eco' },
+    { label: '7. Agent技能', sub: '产出：技能目录' },
+    { label: '8. 多Agent编排', sub: '产出：编排方案' },
+    { label: '9. 评估体系', sub: '产出：评估看板' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    if (n.isNew) cls += ' fh-new';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>
