@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>test-microservice-python · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-process"><span class="layer-dot"></span>工程过程层</div>
+    <h1 class="doc-title">Test Microservice Python</h1>
+    <p class="doc-sub">为微服务生成完整 Python 接口测试套件：业务流程集成测试 + 单接口参数校验。venv 隔离依赖、命令行可视化、致命错误即停、独立日志文件。需《接口全貌.md》前置。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">pre</span> 前置校验</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>输入</dt><dd>微服务名/端口/BASE_URL、接口文档（接口全貌.md）、输出目录、认证方式。</dd>
+            <dt>关卡</dt><dd>必须提供接口全貌.md；仅 dev 环境；必须用 python3 venv。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> 建 venv + 装依赖</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>创建虚拟环境（非系统全局 pip），仅装 <code>requests</code>。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 生成脚本骨架</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>config.py / logger.py / main.py / run_all.sh / run_p0.sh / utils（http_client、data_extractor）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 业务流程测试（集成）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>真实 HTTP 请求模拟完整业务流程，参数从前置接口返回值提取。</dd>
+            <dt>认证</dt><dd>启动时登录获取 Cookie/Session，复用同一 Session，Token 过期自动重登。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 参数校验测试（单元）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>每接口覆盖：必填缺失 / 类型错误 / 边界值 / 不存在 ID。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 运行 + 致命即停</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>规则</dt><dd>FATAL（前置失败）→ <code>sys.exit(1)</code>；ERROR（单查询失败）→ 记录继续。不用 pytest。</dd>
+            <dt>产出</dt><dd>独立日志 <code>logs/test_{时间戳}.log</code>（与终端一致）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">06</span> 数据清理</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>按创建逆序通过 HTTP 清理，不直接操作数据库。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>微服务上线前接口全量回归测试</li>
+          <li>业务流程通畅性验证</li>
+          <li>接口参数校验自动化 / CI/CD 流水线测试</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>Docker 环境测试（用 test-microservice-docker）</li>
+          <li>性能 / 压力测试</li>
+          <li>直接操作数据库</li>
+          <li>无接口全貌.md 时不适用</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li>测试脚本目录（config / logger / main / scene_*.py / utils）</li>
+          <li><code>README.md</code> 测试说明 + <code>logs/test_*.log</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">980</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">24/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="../skills/doc-api-overview/">doc-api-overview（前置：生成接口全貌）</a>
+      <a href="../skills/test-microservice-docker/">test-microservice-docker（Docker 测试）</a>
+      <a href="api-test-harness.html">api-test-harness（单接口快测）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 准备接口全貌', sub: '产出：接口全貌.md' },
+    { label: '2. 搭建测试框架', sub: '产出：目录结构' },
+    { label: '3. 生成业务流程测试', sub: '产出：场景脚本' },
+    { label: '4. 生成参数校验测试', sub: '产出：校验脚本' },
+    { label: '5. 认证与数据清理' },
+    { label: '6. 输出说明文档', sub: '产出：README' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

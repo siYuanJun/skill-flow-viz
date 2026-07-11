@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>debug-frontend-param · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-debug"><span class="layer-dot"></span>排障修复层</div>
+    <h1 class="doc-title">Debug Frontend Param</h1>
+    <p class="doc-sub">前端参数类错误排查元提示词：不直接修后端，而是生成一份给「前端 agent 执行用」的标准化排查文档（背景 + 可执行 grep/curl + 结果汇总）。覆盖 4 类场景。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（元提示词 → 排查文档）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 提取输入意图</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>从用户自然语言提取：问题类型（报错/咨询/痕迹排查）、关键信息（接口路径/参数名/报错内容）、排查方向。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 选场景策略（4 类）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>场景1</dt><dd>接口报错（后端已确认OK）→ 搜错误值硬编码 → 搜调用链路 → 搜上游数据源</dd>
+            <dt>场景2</dt><dd>数据源痕迹 → 搜独有接口路径 → 搜模块标识 → 搜特有 URL 格式</dd>
+            <dt>场景3</dt><dd>接口咨询 → 搜接口路径调用 → 搜封装函数 → 搜 import 引用</dd>
+            <dt>场景4</dt><dd>通用确认 → 聚焦可 grep 关键词，无法 grep 的用自然语言提问</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 生成排查文档</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>结构</dt><dd>背景（2-3 句）+ 排查命令（3-5 条可执行 grep/curl）+ 结果汇总表（命中/文件/结论）。</dd>
+            <dt>红线</dt><dd>不写后端路径；每条命令可复制执行；涉及具体值须给「错误值 vs 正确值」。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 写入 + 自检</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd><code>开发过程/{简短文件名}.md</code>。</dd>
+            <dt>检查</dt><dd>无后端路径、命令可执行、有结果汇总表、背景≤5 行、参考标注「找不到忽略」。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>前端参数类错误（后端已确认 OK）</li>
+          <li>想确认前端是否引用特定/废弃数据源</li>
+          <li>想知道前端怎么调某接口</li>
+          <li>任意前端确认类问题</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>后端 500 错误 → debug-backend-500</li>
+          <li>前端 404 路由问题 → debug-frontend-404</li>
+          <li>直接修改后端代码（本 Skill 只产排查文档）</li>
+          <li>后端未经确认正确前不启用</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>开发过程/{文件名}.md</code>（给前端 agent 执行的排查文档）</li>
+          <li>背景 + 3-5 条 grep/curl + 结果汇总表</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">842</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">22/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="debug-backend-500.html">debug-backend-500（后端 500）</a>
+      <a href="debug-frontend-404.html">debug-frontend-404（前端 404 路由）</a>
+      <a href="debug-problem.html">debug-problem（通用入口）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 提取问题输入' },
+    { label: '2. 选择场景策略', sub: '产出：场景判定' },
+    { label: '3. 生成排查文档', sub: '产出：排查文档' },
+    { label: '4. 写入开发过程', sub: '产出：过程文档' },
+    { label: '5. 输出前检查', sub: '产出：检查清单' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

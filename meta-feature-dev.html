@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>meta-feature-dev · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-meta-method"><span class="layer-dot"></span>元方法论层</div>
+    <h1 class="doc-title">Meta Feature Dev</h1>
+    <p class="doc-sub">功能开发元方法论 + 防幻觉工具链 v2.0：5 个 Python 机械臂产出确定性代码数据，7 阶段 Loop 编排器 + Planning/Execution 双层循环，人工审批 Gate 后才启动实施。</p>
+  </header>
+
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从初始化到完成，每一步做什么、产出什么一目了然。<span style="color:var(--layer-debug);">◆ 菱形</span>为人工审批闸口（Gate）。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>执行全流程（Planning → Gate → Execution）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">init</span> 初始化编排器</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>loop_orchestrator.py init "需求" /path/to/project</code></dd>
+            <dt>动作</dt><dd>载入项目，进入 Planning Loop（Stage 1-5），仅产出文档不写代码。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> 需求澄清（机械臂 build_index / find_similar）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>构建项目结构索引，搜索相似已有模块，产出需求文档。</dd>
+            <dt>输出</dt><dd>项目索引 JSON + 需求文档</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 方案设计（find_similar / scan_imports）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>基于事实对比多套实现方案。</dd>
+            <dt>输出</dt><dd>多方案对比</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 影响评估（find_callers / scan_imports / scan_schema）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>查找符号调用位置、双向依赖图、数据库表结构——核心防幻觉环节。</dd>
+            <dt>输出</dt><dd><strong>影响分析报告</strong></dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 详细设计</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>输出</dt><dd>设计文档</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 分步指导</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>输出</dt><dd>分步计划</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">⏸</span> 人工审批 GATE</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>Planning 只出文档；审批通过后 <code>advance --approve-execution</code> 才进入 Execution。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">06</span> 逐步实现（Execution）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>输出</dt><dd>代码</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">07</span> 测试文档（Execution）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>输出</dt><dd>测试报告</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>已有代码基础上新增 / 修改功能（需影响评估）</li>
+          <li>大型项目做全方位审计分析</li>
+          <li>需产出可观测、可审批的开发文档</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>Greenfield 新项目（无存量代码，无需影响评估）</li>
+          <li>一次性代码片段</li>
+          <li>纯 bug 修复（已有 debug 类 Skill）</li>
+          <li>UEP / AI Dev Workflow 已覆盖的工程流</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>.ai-workflow/meta-feature-dev/STATE.json</code></li>
+          <li>每阶段目录含脚本 JSON + AI 分析文档</li>
+          <li>影响分析报告 / 设计文档 / 分步计划 / 测试报告</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">766</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">22/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="meta-agent-collaboration.html">meta-agent-collaboration（Maker/Checker）</a>
+      <a href="meta-self-iteration.html">meta-self-iteration（自我质疑循环）</a>
+      <a href="../skills/doc-architecture-diagram/">doc-architecture-diagram（架构图）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '① 初始化', sub: '产出：STATE.json' },
+    { label: '② 需求澄清', sub: '产出：需求文档' },
+    { label: '③ 方案设计', sub: '产出：多方案对比' },
+    { label: '④ 影响评估', sub: '产出：影响分析报告' },
+    { label: '⑤ 详细设计', sub: '产出：设计文档' },
+    { label: '⑥ 分步指导', sub: '产出：分步计划' },
+    { label: '◆ 人工审批 Gate', sub: '产出：审批结论', gate: true },
+    { label: '⑦ 逐步实现（通过后）', sub: '产出：代码' },
+    { label: '⑧ 测试文档', sub: '产出：测试报告' },
+    { label: '⑨ 完成', sub: '产出：交付物' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

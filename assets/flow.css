@@ -1,0 +1,169 @@
+/* ============================================================
+   流程图画板样式（Mermaid 渲染 + panzoom 缩放/平移）
+   复用 style.css 的 CSS 变量，自动适配浅色 / 深色
+   ============================================================ */
+
+/* 网格点颜色变量：浅色 / 深色自动适配 */
+:root { --flow-grid-dot: rgba(100, 116, 139, .18); }
+@media (prefers-color-scheme: dark) {
+  :root { --flow-grid-dot: rgba(148, 163, 184, .20); }
+}
+
+.flow-board {
+  position: relative;
+  /* 全幅出血：突破 .wrap 的 max-width 限制，铺满视口全宽 */
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  height: clamp(480px, 72vh, 780px);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  background-image: radial-gradient(var(--flow-grid-dot) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* panzoom 变换的目标：整块画布 */
+.flow-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  width: max-content;
+  height: max-content;
+  padding: 24px;
+}
+
+.flow-canvas svg {
+  max-width: none;
+  height: auto;
+  display: block;
+  cursor: grab;
+}
+
+.flow-canvas svg:active { cursor: grabbing; }
+
+/* 悬浮工具栏 */
+.flow-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: var(--shadow-sm);
+}
+
+.flow-toolbar button {
+  appearance: none;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .15s ease;
+}
+
+.flow-toolbar button:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.flow-toolbar .flow-zoom {
+  min-width: 54px;
+  text-align: center;
+  font: 600 13px/1 "JetBrains Mono", monospace;
+  color: var(--color-muted-fg);
+  padding: 0 6px;
+}
+
+.flow-hint {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 6;
+  font-size: 12px;
+  color: var(--color-muted-fg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 5px 9px;
+}
+
+@media (max-width: 640px) {
+  .flow-board { height: 440px; }
+}
+
+/* ============================================================
+   纯 HTML 流程图（替代 Mermaid）
+   flex 水平排列 + 箭头分隔 + panzoom 缩放/平移
+   ============================================================ */
+
+.fh-flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  cursor: grab;
+}
+
+.fh-flow:active { cursor: grabbing; }
+
+.fh-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  min-width: 96px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.fh-node span {
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.fh-node small {
+  color: var(--color-muted-fg);
+  font-size: 11px;
+  margin-top: 3px;
+  font-weight: 400;
+}
+
+/* Gate / 菱形节点等价：左侧强调色条 + 虚线边框 */
+.fh-node.fh-gate {
+  border-color: var(--layer-debug);
+  border-left-width: 4px;
+  border-left-color: var(--layer-debug);
+}
+
+.fh-arrow {
+  flex-shrink: 0;
+  margin: 0 14px;
+  font-size: 22px;
+  color: var(--color-muted-fg);
+  user-select: none;
+}
+
+.fh-arrow::after { content: "→"; }

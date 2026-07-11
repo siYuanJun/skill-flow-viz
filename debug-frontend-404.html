@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>debug-frontend-404 · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-debug"><span class="layer-dot"></span>排障修复层</div>
+    <h1 class="doc-title">Debug Frontend 404（微服务）</h1>
+    <p class="doc-sub">系统性排查微服务架构中前端接口 404：前端代理 rewrite → 网关路由 → Controller 路径三层链路追踪，自动判定是「网关层错配」还是「前端 proxy rewrite 错配」。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（5 步 SOP）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">00</span> 检查前端代理 rewrite（dev 必做）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>读 vite/webpack 的 <code>proxy.rewrite</code>，确认浏览器路径经 rewrite 后是否等于网关路由前缀。</dd>
+            <dt>关键</dt><dd>浏览器路径前缀 ≠ 网关路由前缀，必须用 rewrite 后路径匹配网关。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> 全项目搜索 Controller</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>grep 定位 Controller 所在微服务、<code>@RequestMapping</code> 完整路径、方法注解。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 检查网关路由配置</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>查网关 application.yml / routes.json / Nginx 的 path pattern 与 strip-prefix，用 rewrite 后路径匹配路由。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 链路对比表（必填）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>列：浏览器路径 / rewrite 后路径 / 网关匹配路由 / 实际路由服务 / Controller 所在服务 → 是否一致。</dd>
+            <dt>判定</dt><dd>一致→其他原因；不一致→根因（网关层 / proxy rewrite 两类错配）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 给出结论</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>诊断报告 <code>开发过程/<服务名>-404问题-<日期>.md</code>：链路对比表 + Mermaid 双链路图 + 错配类型判定 + 修复 diff（首选改前端）。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>前端接口返回 404</li>
+          <li>网关路由到错误微服务</li>
+          <li>Controller 路径与网关前缀不匹配</li>
+          <li>Vite/Webpack proxy rewrite 目标前缀配错</li>
+          <li>微服务架构 + 前端独立部署</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>前端页面路由 404</li>
+          <li>后端 500 → debug-backend-500</li>
+          <li>性能超时 / 数据库问题</li>
+          <li>非微服务架构（无网关层）</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>开发过程/<服务名>-404问题-<日期>.md</code></li>
+          <li>链路对比表 + Mermaid 双链路图 + 修复 diff</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">931</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">95</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">25/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="debug-backend-500.html">debug-backend-500（代码逻辑 500）</a>
+      <a href="doc-troubleshooting.html">doc-troubleshooting（复杂归档）</a>
+      <a href="debug-frontend-param.html">debug-frontend-param（前端参数）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 检查代理rewrite' },
+    { label: '2. 搜索Controller', sub: '产出：位置' },
+    { label: '3. 检查网关路由', sub: '产出：路由配置' },
+    { label: '4. 链路对比表', sub: '产出：对比表' },
+    { label: '5. 给出结论', sub: '产出：诊断报告' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

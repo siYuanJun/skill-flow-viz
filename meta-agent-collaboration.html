@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>meta-agent-collaboration · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-meta-method"><span class="layer-dot"></span>元方法论层</div>
+    <h1 class="doc-title">Meta Agent Collaboration</h1>
+    <p class="doc-sub">智能体协作元方法论：三层认知模型（事实锚定→业务解读→技术推导）+ 两级需求质量门控（文本初筛→上下文深评）+ 反推验证（机械臂校验代码一致性）+ 8 步文档生成流程。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。<span style="color:var(--layer-debug);">◆ 菱形</span>为人工审批闸口（Gate）。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（需求门控 → 8 步生成）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">00</span> 第一关 · 文本质量扫描（不看项目）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>仅读需求文本，评估「可读性 + 完整度」。🟢 放行 → Step1；🟡 引导追问；🔴 不可解析直接驳回。</dd>
+            <dt>原则</dt><dd>零成本初筛，不评项目关联度 / 可行性（还没读项目）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> 路径自动定位</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>所有输入输出统一至 <code>.ai-workflow/</code>，无需询问用户。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 接收需求</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>从 <code>.ai-workflow/meta-agent-collaboration/docs/</code> 或用户指定路径读取需求文档。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 依赖检查 + 机械臂扫描</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>校验必需文件，<code>build_index</code> + <code>scan_schema</code> 扫描项目全貌。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 需求理解 + 第二关上下文深评</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>评估「项目关联度 + 可行性」：🟢 放行 → 三层提取；🟠 警告（附证据，需确认）；🔴 驳回。三层模型：事实锚定→业务解读→技术推导。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 模块划分</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>按功能域 / 角色 / 技术维度聚合模块。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">06</span> 文档生成</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>逐模块填充分析，技术落地点经机械臂反推验证（find_callers / scan_imports / scan_schema）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">07</span> 质量校验</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>全量覆盖、编号一致、原文保真、验证状态标注（✅/⚠️/❌）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">08</span> 输出交付</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd><code>.ai-workflow/meta-agent-collaboration/docs/模块{N}-需求文档.md</code> + 门控评估报告。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>处理结构化 / 非结构化需求文档</li>
+          <li>生成标准化需求分析文档</li>
+          <li>验证技术落地关联点与实际代码一致性</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>一次性简单需求问答</li>
+          <li>纯技术实现 / 编码任务</li>
+          <li>AI Dev Workflow 已覆盖的工程化开发</li>
+          <li>无需求文档提供</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>docs/模块{N}-{模块名称}需求文档.md</code>（含验证状态标注）</li>
+          <li><code>reports/需求质量评估-{timestamp}.md</code>（🟡🟠🔴 时必有）</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">746</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">22/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="meta-feature-dev.html">meta-feature-dev（共享机械臂脚本）</a>
+      <a href="../skills/doc-project-architecture/">doc-project-architecture（架构文档）</a>
+      <a href="meta-self-iteration.html">meta-self-iteration</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 文本质量扫描', sub: '产出：门控评估', gate: true },
+    { label: '2. 路径自动定位' },
+    { label: '3. 接收需求文档' },
+    { label: '4. 依赖检查扫描', sub: '产出：扫描结果' },
+    { label: '5. 需求理解深评', sub: '产出：三层提取', gate: true },
+    { label: '6. 模块划分', sub: '产出：模块清单' },
+    { label: '7. 文档生成', sub: '产出：需求文档' },
+    { label: '8. 质量校验', sub: '产出：校验报告' },
+    { label: '9. 输出交付', sub: '产出：交付文档' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

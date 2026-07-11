@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>debug-backend-500 · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-debug"><span class="layer-dot"></span>排障修复层</div>
+    <h1 class="doc-title">Debug Backend 500（Docker 微服务）</h1>
+    <p class="doc-sub">系统性排查 Docker 部署的 Java 微服务后端 500 错误：Docker 环境感知 → 路由验证 → 日志分析 → 调用链追踪（Controller→Service→Dao）→ 空判断代码审查 → 部署层排查。非 Java 项目用 debug-problem。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（5 阶段 SOP）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">00</span> Docker 环境感知（必做先做）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd><code>docker ps / inspect / logs</code> 确认容器状态、重启次数、错误日志。容器刚重启过则靠代码审查兜底。</dd>
+            <dt>红线</dt><dd>不能假设本地 IDE 直跑相同；必须先做环境感知。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> 定位 Controller + 验证路由链</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>grep 定位 Controller，逐层确认：前端请求 → 代理 → 网关路由 → context-path → Controller 注解路径一致性。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> Docker 日志分析</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>搜索异常关键词并显示上下文，按时间范围查询 NPE / DataAccessException 等。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 调用链追踪</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>并行读取 Controller → Service → SubService → Dao → DaoMapper.xml + Request/Response Model，全链路理解。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 代码审查（空判断一致性）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>重点</dt><dd>高危空判断与使用对象不一致（<code>if(null!=A){use(B);}</code>）、DB 返回 null 未保护、除零、异常被吞。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04.5</span> Docker 部署层（仍 500 时必做）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>判断</dt><dd>「无可用服务」→ 未注册；「Connection refused」→ 端口不匹配；「500 变 404」→ context-path 错配。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 根因定位与修复</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>诊断报告 <code>开发过程/<服务名>-500问题-<日期>.md</code>：根因 + 错误代码 + 修复代码 + 验证命令（Docker compose restart 验证）。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>后端接口返回 500</li>
+          <li>Docker 容器服务出错</li>
+          <li>需追踪 Controller→Service→Dao 调用链</li>
+          <li>网关「无可用服务 / Connection refused」</li>
+          <li>500 修复后变 404（context-path 错配）</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>前端路由 404 → debug-frontend-404</li>
+          <li>性能/超时问题</li>
+          <li>数据库死锁/连接池耗尽（非代码层）</li>
+          <li>跳过 Stage-0 环境感知不适用</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>开发过程/<服务名>-500问题-<日期>.md</code></li>
+          <li>根因 + 修复 diff + 验证命令三段齐全</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">962</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">25/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="doc-troubleshooting.html">doc-troubleshooting（复杂修复归档）</a>
+      <a href="debug-frontend-404.html">debug-frontend-404（前端 404）</a>
+      <a href="debug-problem.html">debug-problem（通用入口）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. Docker环境感知' },
+    { label: '2. 定位Controller路由', sub: '产出：路由链' },
+    { label: '3. 日志分析' },
+    { label: '4. 调用链追踪', sub: '产出：调用链' },
+    { label: '5. 代码空判断审查' },
+    { label: '6. 部署层排查' },
+    { label: '7. 根因定位修复', sub: '产出：诊断报告' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

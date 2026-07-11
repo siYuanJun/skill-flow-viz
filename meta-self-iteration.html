@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>meta-self-iteration · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-meta-eng"><span class="layer-dot"></span>元工程层</div>
+    <h1 class="doc-title">Meta Self-Iteration</h1>
+    <p class="doc-sub">Agent 自我迭代元提示词 v3.0：3 阶段 Loop（采集→提炼→验证）+ 增量 checkpoint + Maker/Checker 防幻觉，从会话历史自动蒸馏并更新个人 playbook。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。<span style="color:var(--layer-debug);">◆ 菱形</span>为人工审批闸口（Gate）。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（3-Stage Loop）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">init</span> 初始化编排器</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>loop_orchestrator.py init --log-dir /path/to/sessions</code></dd>
+            <dt>动作</dt><dd>建立 checkpoint，记录上次扫描位置，准备增量处理。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> Stage 1 · GATHER（机械臂采集）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>输入</dt><dd>会话日志目录</dd>
+            <dt>动作</dt><dd><code>extract_sessions.py</code> 扫描日志，增量提取自 checkpoint 以来的新会话结构化摘要。</dd>
+            <dt>输出</dt><dd><code>session_delta.json</code></dd>
+            <dt>关卡</dt><dd>新会话数 &gt; 0 才继续</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> Stage 2 · DISTILL（AI 提炼）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>输入</dt><dd>session_delta + 现有 playbook</dd>
+            <dt>动作</dt><dd>AI 提炼可复用模式，自动执行「反固化三闸门」检查，避免固化已有结论。</dd>
+            <dt>输出</dt><dd><code>playbook_draft.md</code></dd>
+            <dt>关卡</dt><dd>模式条目 ≥ 1</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> Stage 3 · VERIFY（AI 验证合并）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>输入</dt><dd>draft + session_delta（逐条回溯原始证据）</dd>
+            <dt>动作</dt><dd>Maker≠Checker：验证者独立回溯每条模式到原始会话，确认属实后 <code>merge --approve</code>。</dd>
+            <dt>输出</dt><dd>合并后的 <code>agent-personal-playbook.md</code> + <code>STATE.json</code></dd>
+            <dt>关卡</dt><dd>全量验证标注完成</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>定期（月度自动复盘）</li>
+          <li>里程碑后（完成大功能 / 项目阶段）</li>
+          <li>跨项目前（在新项目延续已有经验）</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>一次性简单反思（无需结构化 playbook）</li>
+          <li>纯代码审查</li>
+          <li>新项目无会话历史 / 无执行日志</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>.ai-workflow/meta-self-iteration/agent-personal-playbook.md</code></li>
+          <li><code>.ai-workflow/meta-self-iteration/STATE.json</code></li>
+          <li><code>session_delta.json</code>（增量采集）</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">853</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">22/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="meta-feature-dev.html">meta-feature-dev（共享机械臂）</a>
+      <a href="meta-agent-collaboration.html">meta-agent-collaboration（Maker/Checker）</a>
+      <a href="doc-troubleshooting.html">doc-troubleshooting（案例数据源）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 初始化Loop', sub: '产出：STATE' },
+    { label: '2. 机械臂扫描', sub: '产出：session_delta' },
+    { label: '3. AI提炼模式', sub: '产出：playbook_draft' },
+    { label: '4. AI验证合并', sub: '产出：playbook.md' },
+    { label: '5. 审批合并', sub: '产出：合并playbook', gate: true }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

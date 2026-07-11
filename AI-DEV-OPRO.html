@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-DEV-OPRO · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+<style>
+  .tag-gate { display:inline-block; margin-left:8px; padding:1px 7px; font-size:11px; line-height:1.6; color:#92400E; background:#FEF3C7; border:1px solid #D97706; border-radius:10px; vertical-align:middle; font-weight:600; }
+  .step-note { margin-top:8px; padding:8px 10px; font-size:12.5px; line-height:1.6; color:var(--color-muted-fg); background:var(--color-accent-soft); border-left:3px solid var(--color-accent); border-radius:6px; }
+  .step-note b { color:var(--color-foreground); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-dev"><span class="layer-dot"></span>③ 工程过程层</div>
+    <h1 class="doc-title">AI-DEV-OPRO</h1>
+    <p class="doc-sub">AI Dev Workflow（ai-dev-workflow <b>v2.5.1</b>）——人工确认闭环门控的工程化开发脚手架：把需求转成完整项目，强制逐模块「规格确认→开发→自审→测试→熔断→闭环」。v2.5 核心：模块规格文档 + 逐模块人工确认 + 入口级硬约束；任务原子化拆分 + 断点续接（N+1）防上下文溢出；同一任务重试超 3 次触发熔断。杜绝 AI 跳流程。</p>
+  </header>
+
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。<span style="color:var(--layer-debug);">▍左侧高亮条</span>为人工审批闸口（Gate，🛑 必须暂停等人工确认）。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（5 步 + 逐模块闸控循环）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 初始化与配置确认<span class="tag-gate">🛑 人工确认</span></summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>workflow-state.json（需求 / 技术栈偏好 / 熔断配置）</dd>
+            <dt>门控</dt><dd>交互式询问并记录配置，🛑 人工确认后才进入下一步。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 创建项目骨架<span class="tag-gate">🛑 人工确认</span></summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>标准目录（frontend/backend/.ai-workflow/）+ .gitignore + .env + docker-compose.yml</dd>
+            <dt>门控</dt><dd>骨架生成后 🛑 人工确认。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 模块拆解与规格确认<span class="tag-gate">🛑 逐模块确认</span></summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>INDEX.md、MODULE-xxx-spec.md（每模块一份）、DOCS-INDEX.md 骨架、ARCHITECTURE-OVERVIEW.md 骨架、含 Mermaid 依赖图的任务列表</dd>
+            <dt>门控</dt><dd>v2.5 看家本领：展示全部模块规格，🛑 人工<b>逐模块</b>确认后才进入开发。</dd>
+          </dl>
+          <div class="step-note"><b>原子化 + 断点续接（N+1）</b>：PRD 拆为约 100 份原子任务（单函数/单测试/单文档段），任一会话上下文将满时切新窗口，读 INDEX.md 定位首个 ⏳ 任务从 N+1 续，绝不从头重跑。</div>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 逐模块执行与闭环<span class="tag-gate">🛑 每模块闭环确认</span></summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>代码文件、测试报告、任务日志（logs/TASK-XXX.md）、模块闭环文档（flow/design/summary/checklist 四份）</dd>
+            <dt>门控</dt><dd>每模块：展示规格 → 🛑 确认 → 开发 → 自审 → 测试 → 熔断检查 → 闭环 → 日志；严禁跨模块。闭环后 🛑 暂停，人工确认通过才解锁下一模块。</dd>
+          </dl>
+          <div class="step-note"><b>熔断器</b>：同一任务重试 ≤ 3 次，超过触发熔断、标记 ❌ 受阻，等待人工决策。日志不完整视为任务未完成（不得标 ✅）。</div>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 交付文档与经验沉淀<span class="tag-gate">🛑 人工确认</span></summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>三层交付文档（流程 / 设计说明 / 大白话摘要 / 检查清单 / ADR）、架构总览(增量)、经验知识库 LESSONS-LEARNED.md(增量)</dd>
+            <dt>门控</dt><dd>全套交付文档生成后 🛑 人工确认。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger"><h3>触发条件</h3><ul>
+          <li>开发完整管理系统：如「开发电商后台管理系统」</li>
+          <li>构建 SaaS 应用：如「构建企业 SaaS 应用」</li>
+          <li>初始化全栈项目：如「初始化 Vue + Laravel 全栈项目」</li>
+          <li>按工程化流程开发 / 从 0 到 1 完整开发</li>
+          <li>已有项目追加功能模块（自动跳过 Step 1/2）</li>
+      </ul></div>
+      <div class="card boundary"><h3>排除边界</h3><ul>
+          <li>仅写一段代码（非工程化流程）</li>
+          <li>修复 Bug / 解释调试（非完整开发流程）</li>
+          <li>设计或审查：「设计数据库表」「代码审查」</li>
+          <li>部署运维 / 技术咨询（应由其他 Skill 接管）</li>
+      </ul></div>
+      <div class="card output"><h3>产出物（写入 .ai-workflow/）</h3><ul>
+          <li>workflow-state.json（配置基线 + 熔断配置）</li>
+          <li>项目骨架（目录 / .gitignore / .env / docker-compose.yml）</li>
+          <li>模块规格文档（INDEX.md / MODULE-xxx-spec.md，🛑 逐模块确认）</li>
+          <li>代码文件 + 测试报告 + 任务日志（logs/TASK-XXX.md）</li>
+          <li>模块闭环文档（flow / design / summary / checklist）</li>
+          <li>全套交付文档（流程 / 设计 / 大白话摘要 / 检查清单 / ADR）</li>
+          <li>架构总览(增量) + 经验知识库 LESSONS-LEARNED.md(增量)</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">v2.5.1</div><div class="m-label">版本</div></div>
+      <div class="metric"><div class="m-val">5</div><div class="m-label">人工确认 Gate</div></div>
+      <div class="metric"><div class="m-val">7</div><div class="m-label">步骤文件 01-07</div></div>
+      <div class="metric"><div class="m-val">~100</div><div class="m-label">原子任务/项目</div></div>
+      <div class="metric"><div class="m-val">3</div><div class="m-label">熔断重试上限</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="project-skill-builder.html">project-skill-builder</a>
+      <a href="meta-feature-dev.html">meta-feature-dev</a>
+      <a href="#">yao-meta-skill（质检总引擎）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 初始化与配置确认', sub: '产出：workflow-state.json', gate: true },
+    { label: '2. 创建项目骨架', sub: '产出：目录与配置文件', gate: true },
+    { label: '3. 模块拆解与规格确认', sub: '产出：规格文档与架构骨架', gate: true },
+    { label: '4. 逐模块执行与闭环', sub: '产出：代码与测试报告', gate: true },
+    { label: '5. 交付文档与经验沉淀', sub: '产出：交付文档与知识库', gate: true }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

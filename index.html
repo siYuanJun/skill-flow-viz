@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>核心 Skill 工程执行流程总览</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .skill-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .skill-list a {
+    display: block;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color .2s, transform .2s;
+  }
+  .skill-list a:hover { border-color: var(--color-accent); text-decoration: none; transform: translateY(-1px); }
+  .skill-list .sn { font-family: var(--font-mono); font-weight: 600; font-size: 15px; color: var(--color-foreground); }
+  .skill-list .sd { display: block; font-size: 13.5px; color: var(--color-muted-fg); margin-top: 4px; }
+  .layer-h { display: flex; align-items: center; gap: 10px; margin: 30px 0 14px; }
+  .layer-h h2 { margin: 0; font-size: 18px; font-weight: 600; }
+  .layer-h .lc { font-family: var(--font-mono); font-size: 12px; color: var(--color-muted-fg); }
+  .cover-note { border-left: 3px solid var(--color-debug); padding-left: 12px; margin: 10px 0; font-size: 14px; }
+  .cover-strong { color: var(--color-success); }
+  .cover-weak { color: var(--color-debug); }
+  .cover-blocked { color: var(--color-destructive); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <div class="layer-tag l-meta-eng"><span class="layer-dot"></span>SkillFlow Viz</div>
+    <h1 class="doc-title">核心 Skill 工程 · 执行流程总览</h1>
+    <p class="doc-sub">软件从零到一全生命周期涉及的 15 个核心 Skill 工程（均未被 <code>.gitignore</code> 屏蔽），逐个以可视化 HTML 呈现「它怎么执行」。按七大层次分组。样式由 <code>ui-ux-pro-max</code> 统一设计系统驱动。</p>
+  </header>
+
+  <!-- 元工程层 -->
+  <div class="layer-h"><h2>① 元工程层</h2><span class="lc">管理 Skill 工程本身</span></div>
+  <ul class="skill-list">
+    <li><a href="project-skill-builder.html"><span class="sn">project-skill-builder</span><span class="sd">项目 Skill 工程惯例书：目录布局 / 产出隔离 / SKILL.md 规范 / 质检闭环</span></a></li>
+    <li><a href="meta-self-iteration.html"><span class="sn">meta-self-iteration</span><span class="sd">从会话历史蒸馏个人 playbook：3 阶 Loop + 增量 checkpoint + Maker/Checker 防幻觉</span></a></li>
+  </ul>
+
+  <!-- 元方法论层 -->
+  <div class="layer-h"><h2>② 元方法论层</h2><span class="lc">教 AI 怎么思考 / 做事</span></div>
+  <ul class="skill-list">
+    <li><a href="meta-feature-dev.html"><span class="sn">meta-feature-dev</span><span class="sd">功能开发元方法论 + 5 机械臂防幻觉：7 阶 Loop + Planning/Execution 双层循环</span></a></li>
+    <li><a href="meta-agent-collaboration.html"><span class="sn">meta-agent-collaboration</span><span class="sd">需求两级质量门控 + 三层认知模型 + 反推验证（机械臂校验代码一致性）</span></a></li>
+  </ul>
+
+  <!-- 工程过程层 -->
+  <div class="layer-h"><h2>③ 工程过程层</h2><span class="lc">执行日常开发任务</span></div>
+  <ul class="skill-list">
+    <li><a href="planning-with-files-zh.html"><span class="sn">planning-with-files-zh</span><span class="sd">Manus 三文件持久化规划 + 自动维护 STATUS/CHANGELOG/PROJECT_MAP</span></a></li>
+    <li><a href="test-microservice-python.html"><span class="sn">test-microservice-python</span><span class="sd">微服务 Python 全量接口测试：venv 隔离 + 致命错误即停 + 独立日志</span></a></li>
+    <li><a href="api-test-harness.html"><span class="sn">api-test-harness</span><span class="sd">接口机械臂测试：grep 提取真实参数 + Python + curl，四道防幻觉红线</span></a></li>
+    <li><a href="AI-DEV-OPRO.html"><span class="sn">AI-DEV-OPRO（ai-dev-workflow）</span><span class="sd">人工确认闭环门控的工程化开发脚手架：5 步强制逐模块规格确认→开发→自审→测试→闭环</span></a></li>
+  </ul>
+
+  <!-- 排障修复层 -->
+  <div class="layer-h"><h2>④ 排障修复层</h2><span class="lc">定位与解决问题</span></div>
+  <ul class="skill-list">
+    <li><a href="debug-problem.html"><span class="sn">debug-problem</span><span class="sd">通用技术排障入口：自动分类（前端/后端+语言/框架）+ 假设驱动逐步排查</span></a></li>
+    <li><a href="debug-frontend-param.html"><span class="sn">debug-frontend-param</span><span class="sd">前端参数排查元提示词：生成给前端 agent 执行的标准排查文档</span></a></li>
+    <li><a href="debug-backend-500.html"><span class="sn">debug-backend-500</span><span class="sd">Docker + Java 后端 500 专项：5 阶段 SOP（环境感知→调用链→部署层）</span></a></li>
+    <li><a href="debug-frontend-404.html"><span class="sn">debug-frontend-404</span><span class="sd">微服务前端 404 三层链路追踪：自动判定网关层 / proxy rewrite 错配</span></a></li>
+    <li><a href="doc-troubleshooting.html"><span class="sn">doc-troubleshooting</span><span class="sd">技术问题 13 章复盘文档（快速版 / 完整版）+ Mermaid 流程图</span></a></li>
+  </ul>
+
+  <!-- 基础设施层 -->
+  <div class="layer-h"><h2>⑤ 基础设施层</h2><span class="lc">容器 / 部署 / 上下文工程</span></div>
+  <ul class="skill-list">
+    <li><a href="docker-container-design.html"><span class="sn">docker-container-design</span><span class="sd">生产级 Docker 容器化规范：6 大原则 + 强制国产镜像源 + 离线部署</span></a></li>
+    <li><a href="rag-context-engine.html"><span class="sn">rag-context-engine</span><span class="sd">RAG 上下文工程规范：Write/Select/Compress/Isolate 四策略 + 8 大原则</span></a></li>
+  </ul>
+
+  <!-- 行业方案层 -->
+  <div class="layer-h"><h2>⑥ 行业方案层</h2><span class="lc">产品级架构与垂直交付</span></div>
+  <ul class="skill-list">
+    <li><a href="project-cv-generator.html"><span class="sn">project-cv-generator</span><span class="sd">8 段式中文项目简历生成器：7 机械臂（含贡献证据+工程方法论）提取确定性数据 + AI 业务价值映射，产出简历/一页版/面试特训包</span></a></li>
+  </ul>
+
+  <!-- 健全性观察 -->
+  <section class="section">
+    <h2>生命周期覆盖 · 健全性观察</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">你提到「映射只从软件生命周期角度，可能有不健全的部分」。基于 15 个未屏蔽 skill 的实际覆盖，观察如下：</p>
+
+    <p class="cover-note"><span class="cover-strong">✅ 强覆盖</span>：元工程、元方法论、工程过程、排障修复（4 类排障齐全）、基础设施 五层均有活跃 skill，闭环完整。</p>
+    <p class="cover-note"><span class="cover-weak">⚠️ 薄弱</span>：<strong>行业方案层</strong>在未屏蔽集合中仅剩 <code>project-cv-generator</code> 一个；完整的「开发执行引擎」与「质检总引擎」在 Git 活跃视角下缺位（见下）。</p>
+    <p class="cover-note"><span class="cover-blocked">🔴 被 .gitignore 屏蔽的核心（在 Git 视角不可见，但本地文件存在）</span>：
+      <br>• <code>UEP</code> / <code>ai-dev-workflow</code> — 两大「开发执行引擎」（并行多 Agent / 串行全栈脚手架），屏蔽后「开发执行」阶段在 Git 活跃链路中为空。
+      <br>• <code>yao-meta-skill</code> — 质检总引擎，屏蔽后新 skill 无法经 Git 跟踪的验收闭环。
+      <br>• <code>graphify-8</code> — 代码库知识图谱，基础设施层「代码理解」缺位。
+      <br>• <code>ai-digital-employee</code> — AI 数字员工产品架构，行业方案层另一支柱。
+    </p>
+
+    <h3 style="font-size:15px;margin:20px 0 8px;">建议补全方向</h3>
+    <ul style="font-size:14px;padding-left:18px;">
+      <li>若希望未屏蔽集合本身覆盖<strong>完整生命周期</strong>，需将 <code>UEP</code> / <code>ai-dev-workflow</code> / <code>yao-meta-skill</code> 从 <code>.gitignore</code> 解除（或软链至未屏蔽位置），否则「开发执行 + 质检」阶段在 Git 视角为空。</li>
+      <li>在 <code>核心Skill工程目录映射.md</code> 中标注每个核心是否被屏蔽、原因，避免「清单在但 Git 里没有」的认知错位。</li>
+      <li>行业方案层可补充：部署运维（CI/CD 发布）、监控告警、安全合规等 skill，目前该层最单薄。</li>
+      <li>基础设施层可补充：本地开发环境（DevContainer）、API 网关治理等，目前仅有容器化与 RAG 上下文两项。</li>
+    </ul>
+  </section>
+</div>
+</body>
+</html>

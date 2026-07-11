@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>project-cv-generator · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+<style>
+  .tag-new { display:inline-block; margin-left:8px; padding:1px 7px; font-size:11px; line-height:1.6; color:#fff; background:#16a34a; border-radius:10px; vertical-align:middle; font-weight:600; }
+  .fh-node.fh-new { border-color:#16a34a; box-shadow:0 0 0 2px rgba(22,163,74,.18); }
+  .fh-node.fh-new small { color:#16a34a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-industry"><span class="layer-dot"></span>行业方案层</div>
+    <h1 class="doc-title">Project CV Generator</h1>
+    <p class="doc-sub">项目简历生成器：7 个 Python 机械臂先行提取确定性数据（技术栈/技术亮点/测试质量/功能模块/技术挑战/贡献证据/工程方法论），AI 做业务价值映射与角色确认，产出 8 段式中文面试级项目简历 + 一页版 + 面试背诵特训包。支持 Java/PHP/Python/Go/Node/Vue/React，零幻觉。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（10 步 Workflow）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 技术栈自动检测</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>脚本</dt><dd><code>project_scanner.py</code> 检测语言/框架/规模，告知结果并询问特殊关注点。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 技术亮点扫描（代码+文档）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>脚本</dt><dd><code>tech_highlight_scanner.py</code> 识别模式/缓存/异步/MQ 等亮点。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 工程质量评估</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>脚本</dt><dd><code>test_quality_scanner.py</code> 评估测试/CI/Docker 成熟度。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 业务模块识别</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>脚本</dt><dd><code>feature_module_scanner.py</code> 识别 API/数据模型等业务模块。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 技术挑战提取</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>脚本</dt><dd><code>challenge_extractor.py</code> 从 TODO/优化/FIXME 提取攻克过的难题。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">06</span> 贡献证据提取（git 改动热点）<span class="tag-new">新增</span></summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>脚本</dt><dd><code>contribution_scanner.py</code> 扫描 git 改动热点，量化个人贡献证据（无 git 时优雅降级）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">07</span> 工程方法论提炼（16 类方法论）<span class="tag-new">新增</span></summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>脚本</dt><dd><code>methodology_extractor.py</code> 从代码/文档识别 DDD/分层/设计模式等工程方法论与思维。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">08</span> AI 业务价值映射</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/business-value-guide.md</code> 将技术指标映射为业务价值（面试官记忆线）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">09</span> 交互确认角色与贡献边界</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>参考</dt><dd><code>references/fuzzy-expression-guide.md</code> 模糊量级表达 + 角色/职级/边界必须由用户确认。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">10</span> AI 填列 + 组装三产物</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>基于 7 个机械臂 JSON，AI 填语义描述，产出 3 份产物并写入被分析项目 <code>docs/</code>。</dd>
+            <dt>产出</dt><dd>① 8 段式项目简历（含「工程方法论与思维」）② 一页简历版 ③ 面试特训包（电梯演讲 + Top3 + STAR + 记忆卡）。</dd>
+            <dt>红线</dt><dd>脚本先行、数字真实、零幻觉（无数据不编造）、仅中文、三产物随项目走纳入版本管理。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>项目简历、项目总结、面试准备、背诵特训</li>
+          <li>简历亮点提炼、项目能力/方法论分析</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>架构文档 → doc-project-architecture</li>
+          <li>接口文档 → doc-api-overview</li>
+          <li>业务风险分析 → doc-business-risk</li>
+          <li>项目启动文档 → doc-project-startup</li>
+          <li>纯代码审查不产出简历</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物（写入项目 docs/）</h3>
+        <ul>
+          <li>8 段式结构化 Markdown 项目简历（仅中文）</li>
+          <li>一页简历版 + 面试特训包（3 份产物）</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">823</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">94</div><div class="m-label">Prompt</div></div>
+      <div class="metric"><div class="m-val">92</div><div class="m-label">System</div></div>
+      <div class="metric"><div class="m-val">49</div><div class="m-label">Tests</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="../skills/doc-project-architecture/">doc-project-architecture（架构文档）</a>
+      <a href="../skills/doc-api-overview/">doc-api-overview（接口文档）</a>
+      <a href="../skills/doc-business-risk/">doc-business-risk（业务风险）</a>
+      <a href="../skills/doc-project-startup/">doc-project-startup（启动文档）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 技术栈检测', sub: '产出：栈JSON' },
+    { label: '2. 技术亮点扫描', sub: '产出：亮点JSON' },
+    { label: '3. 工程质量评估', sub: '产出：质量JSON' },
+    { label: '4. 业务模块识别', sub: '产出：模块JSON' },
+    { label: '5. 技术挑战提取', sub: '产出：挑战JSON' },
+    { label: '6. 贡献证据提取', sub: '产出：贡献JSON', isNew: true },
+    { label: '7. 工程方法论提炼', sub: '产出：方法论JSON', isNew: true },
+    { label: '8. AI填列组装', sub: '产出：简历+一页版+特训包' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    if (n.isNew) cls += ' fh-new';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

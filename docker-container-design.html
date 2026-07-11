@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>docker-container-design · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-infra"><span class="layer-dot"></span>基础设施层</div>
+    <h1 class="doc-title">Docker Container Design</h1>
+    <p class="doc-sub">生产级 Docker 容器化设计规范：6 大核心原则 + 环境分离/职责单一 2 大理念。含强制国产镜像源适配、离线部署、桥接网络 + 静态 IP 与统一镜像导出。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 分析项目</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>输入</dt><dd>技术栈（Node/Java/Python/PHP/Go）、根目录、端口、启动命令、构建产物、部署环境、资源预估。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 编写 Dockerfile（纯净镜像）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>红线</dt><dd>绝不写死 <code>ENV APP_ENV</code>；所有 FROM 强制走国产镜像源（禁止直连 Docker Hub）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> docker-compose.yml（生命周期全管）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>覆盖</dt><dd>build/networks/deploy.resources/healthcheck/logging/restart/volumes；生产环境不走 <code>ports</code> 映射。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 增量更新脚本（≤30 行）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd><code>cli/update_app.sh</code> 仅 <code>docker cp</code> + <code>docker restart</code>，不重复实现 compose 功能。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 导出脚本 + 环境切换验证</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd><code>scripts/export_images.sh</code> 按服务名导出 tar（离线/内网部署）；<code>APP_ENV=production docker-compose up -d</code> 验证同镜像多环境。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>首次容器化（Dockerfile + compose）或审查已有方案</li>
+          <li>离线部署 / 容器网络拓扑设计</li>
+          <li>compose 与增量脚本职责划分</li>
+          <li>国内镜像拉取超时、时区、数据持久化</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>Kubernetes / Helm</li>
+          <li>CI/CD 流水线、云平台 IaC</li>
+          <li>docker CLI 调试命令、容器安全扫描</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>Dockerfile</code>（零环境硬编码）</li>
+          <li><code>docker-compose.yml</code>（网络+资源+健康检查）</li>
+          <li><code>scripts/export_images.sh</code> + <code>cli/update_app.sh</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">965</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">25/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="rag-context-engine.html">rag-context-engine（同模式参考）</a>
+      <a href="../skills/ai-dev-workflow/">ai-dev-workflow（实施）</a>
+      <a href="debug-problem.html">debug-problem（排查）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 分析项目技术栈' },
+    { label: '2. 编写Dockerfile', sub: '产出：Dockerfile' },
+    { label: '3. 编写compose', sub: '产出：compose.yml' },
+    { label: '4. 增量更新脚本', sub: '产出：update_app' },
+    { label: '5. 镜像导出脚本', sub: '产出：export脚本' },
+    { label: '6. 环境切换验证', sub: '产出：验证通过' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

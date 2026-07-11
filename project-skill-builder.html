@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>project-skill-builder · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-meta-eng"><span class="layer-dot"></span>元工程层</div>
+    <h1 class="doc-title">Project Skill Builder</h1>
+    <p class="doc-sub">项目 Skill 工程惯例书：五大惯例 + 四种设计模式 + 质检闭环，让新窗口 Agent 自动继承项目工程标准。创建新 Skill 时触发，全程指导目录布局、产出隔离、SKILL.md 规范与治理验收。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。<span style="color:var(--layer-debug);">◆ 菱形</span>为人工审批闸口（Gate）。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（创建新 Skill 的 10 步）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 确认名称与目录</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>先查 <code>核心Skill工程目录映射.md</code> 确认无冲突，确定 Skill 名称，在 <code>skills/</code> 下创建目录。</dd>
+            <dt>产出</dt><dd><code>skills/&lt;skill-name&gt;/</code> 空目录</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 写 SKILL.md 入口</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>写 YAML frontmatter（name + description，含触发关键词）+ 标准结构块（这是什么 / 何时使用 / 流程 / 输入输出 / 关键原则 / 相关 Skill）。</dd>
+            <dt>红线</dt><dd>SKILL.md ≤ 1000 tokens；深度内容下沉到 <code>references/</code>。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 选定设计模式</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>四选一：蓝图型（docker-container-design）/ SOP型（debug-backend-500）/ 工具入口型（debug-problem）/ 元方法论型（meta-agent-collaboration），对照范例写流程。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 规划产出隔离子树</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>为非 ai-dev-workflow 的 Skill 申请 <code>.ai-workflow/&lt;skill-name&gt;/</code> 独立子目录；主系统独占根级 <code>config/prd/tasks/...</code>。</dd>
+            <dt>红线</dt><dd>绝对不写回 <code>skills/</code> 源码目录、不污染他人子树。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 创建治理文件</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd><code>manifest.json</code> + <code>agents/interface.yaml</code> + <code>reports/intent-context.json</code>（三大必建文件）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">06</span> 创建测试文件</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd><code>evals/trigger-tests.yaml</code>，至少 5 个 should-trigger + 3 个 should-not-trigger。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">07</span> 写 references 深度内容</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>模板、示例、完整指南（模板 / 治理清单 / 设计模式目录 / 产出路径规则 / 质检流程）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">08</span> 写 CHANGELOG</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd><code>CHANGELOG.md</code> 记录版本与变更。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">09</span> 跑 yao-meta-skill 质检</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>六维度评分（metadata / ownership / boundary / assets / maintenance / trust），逐个修复不及格维度，复检。</dd>
+            <dt>门槛</dt><dd>Governance ≥ 90、Token ≤ 1000、Intent ≥ 90 才交付。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">10</span> 登记到索引</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd>更新 <code>SKILLS-INDEX.md</code> 与 <code>核心Skill工程目录映射.md</code>。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>创建全新的 Skill（从零或从经验提炼）</li>
+          <li>审查已有 Skill 是否符合项目规范</li>
+          <li>新聊天窗口中需让 Agent 了解「本项目怎么做事」</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>修改已有 Skill 的某个文件 → 直接改，无需本 Skill</li>
+          <li>通用 Skill 工程方法论学习 → 用 <code>yao-meta-skill</code></li>
+          <li>功能开发任务 → 用 <code>ai-dev-workflow</code></li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li>新建 <code>skills/&lt;name&gt;/</code> 全套标准布局</li>
+          <li><code>.ai-workflow/&lt;name&gt;/</code> 产出隔离子树</li>
+          <li>更新 <code>核心Skill工程目录映射.md</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">758</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">85</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">95</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">22/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="../skills/yao-meta-skill-main/">yao-meta-skill（质检引擎）</a>
+      <a href="../skills/ai-dev-workflow/">ai-dev-workflow（功能开发）</a>
+      <a href="meta-feature-dev.html">meta-feature-dev</a>
+      <a href="meta-agent-collaboration.html">meta-agent-collaboration</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 确认名称建目录', sub: '产出：目录结构' },
+    { label: '2. 编写SKILL.md', sub: '产出：SKILL.md' },
+    { label: '3. 判定类型写流程', sub: '产出：流程块' },
+    { label: '4. 确定产出路径', sub: '产出：路径映射' },
+    { label: '5. 创建治理文件', sub: '产出：治理三文件' },
+    { label: '6. 创建测试与参考', sub: '产出：evals/refs' },
+    { label: '7. 跑质检验收', sub: '产出：评分报告', gate: true },
+    { label: '8. 更新索引登记', sub: '产出：SKILLS索引' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

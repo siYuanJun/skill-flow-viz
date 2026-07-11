@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rag-context-engine · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-infra"><span class="layer-dot"></span>基础设施层</div>
+    <h1 class="doc-title">RAG Context Engine</h1>
+    <p class="doc-sub">RAG 上下文工程规范引擎（双栖：研发层基础设施 + 业务层 RAG 专项）。不是代码生成器，而是设计规范 + 机械臂辅助：LangChain Write/Select/Compress/Isolate 四策略、8 大设计原则、分层记忆、防幻觉、生产检查清单。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（设计驱动，非代码生成）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 读八大设计原则（开发前必读）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>内容</dt><dd>四态模型(Write/Select/Compress/Isolate)、Token 预算、分层记忆、压缩矩阵、防幻觉、回调体系、可观测性、持久化恢复。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 设计上下文四态架构</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>规划 Write（持久化到窗口外）/ Select（语义检索相关）/ Compress（超阈值压缩）/ Isolate（多任务隔离）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 落地分层记忆 + Token 预算</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>Layer1 短期内存 / Layer2 中期缓存(24h TTL) / Layer3 长期向量库；<code>token_budget.py</code> 三道防线：70%告警 / 85%自动压缩 / 95%强截断。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 接入机械臂脚本</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>脚本</dt><dd>token_budget / context_compressor / context_audit（实体对比+信息丢失）/ session_manager（持久化恢复）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 过生产检查清单 + 产出文档</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>产出</dt><dd><code>.ai-workflow/rag-context-engine/docs/</code> 设计文档 + <code>sessions/</code> 存档 + <code>metrics/</code> 监控数据。</dd>
+            <dt>红线</dt><dd>防幻觉三防护：压缩前后实体对比 / 置信度标记 / 疑问回退检索。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>开发 RAG 上下文管理 / Agent 记忆系统</li>
+          <li>Token 膨胀需压缩策略</li>
+          <li>多轮对话上下文生命周期管理</li>
+          <li>从零设计 RAG 上下文架构</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>非 RAG 场景、纯检索任务</li>
+          <li>纯前端 state 管理</li>
+          <li>非 RAG 通用上下文 → meta-feature-dev</li>
+          <li>已有成熟方案 → AI Dev Workflow</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>.ai-workflow/rag-context-engine/docs/</code> 设计文档</li>
+          <li><code>sessions/{id}/</code> 会话存档 + <code>metrics/</code> 监控</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">—</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">—</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">—</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">—</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="docker-container-design.html">docker-container-design（模式参考）</a>
+      <a href="meta-feature-dev.html">meta-feature-dev（需求澄清）</a>
+      <a href="../skills/ai-dev-workflow/">ai-dev-workflow（实施）</a>
+      <a href="debug-problem.html">debug-problem（排查）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 设计四态模型' },
+    { label: '2. Token预算管控', sub: '产出：预算脚本' },
+    { label: '3. 分层记忆架构' },
+    { label: '4. 压缩策略设计', sub: '产出：压缩比' },
+    { label: '5. 防幻觉校验' },
+    { label: '6. 回调事件体系' },
+    { label: '7. 可观测性输出', sub: '产出：监控数据' },
+    { label: '8. 持久化恢复' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>debug-problem · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-debug"><span class="layer-dot"></span>排障修复层</div>
+    <h1 class="doc-title">Debug Problem（通用排查）</h1>
+    <p class="doc-sub">通用型技术问题排查入口：自动判定前端/后端 + 语言/框架，假设驱动逐步验证，适配 PHP/Java/Python/Go/Vue/React 任意技术栈。不限定 Docker 或特定框架。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。<span style="color:var(--layer-debug);">◆ 菱形</span>为人工审批闸口（Gate）。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（4 步）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">00</span> 自动分类（无需用户指定）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>判定</dt><dd>前端/后端（报错位置）、语言/框架（Laravel/Spring Boot/Django/Nuxt/Go）、运行环境（Docker/Web服务器/本地）、问题类型（HTTP码/堆栈/渲染/数据/性能）。</dd>
+            <dt>输出</dt><dd>一句话告知判断，如「后端 Java + Docker，HTTP 500」。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> 收集证据（按需自适应）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>按分类选证据方式（Docker: docker logs；本地: tail/grep；前端: Console/Network）。必收集：完整错误、触发条件、相关上下文。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 假设驱动排查（核心）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>列 2-5 个原因（按可能性排序），逐个验证，更新结果（✅确认/❌排除/⚠️待深入）。每次只验一个假设。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 定位根因 + 修复 + 验证</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>根因一句话 + 代码 diff/配置调整（先确认再执行）+ 验证命令。最小改动优先。</dd>
+            <dt>产出</dt><dd>排查笔记存 <code>.ai-workflow/debug-problem/[日期]-[问题简述].md</code>；复杂问题可转 doc-troubleshooting 复盘。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>任何困惑的技术问题（报错/异常/行为不符预期）</li>
+          <li>不确定前端还是后端问题</li>
+          <li>技术栈不限（PHP/Java/Python/Go/Vue/React…）</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>需求分析/方案设计 → meta-feature-dev</li>
+          <li>纯代码编写 → AI Dev Workflow</li>
+          <li>Docker+Java 专项 → debug-backend-500</li>
+          <li>404 链路追踪 → debug-frontend-404</li>
+          <li>前端参数排查文档 → debug-frontend-param</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>.ai-workflow/debug-problem/[日期]-[问题简述].md</code></li>
+          <li>根因 + 修复 diff + 验证命令</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">688</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">85</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">22/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="debug-backend-500.html">debug-backend-500（Docker+Java 专项）</a>
+      <a href="debug-frontend-404.html">debug-frontend-404（404 链路）</a>
+      <a href="debug-frontend-param.html">debug-frontend-param（前端参数）</a>
+      <a href="doc-troubleshooting.html">doc-troubleshooting（复盘归档）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 自动分类判定', sub: '产出：分类结论' },
+    { label: '2. 收集证据', sub: '产出：证据集' },
+    { label: '3. 假设驱动排查', sub: '产出：假设表' },
+    { label: '4. 根因修复验证', sub: '产出：修复diff', gate: true }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

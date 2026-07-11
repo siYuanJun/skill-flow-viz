@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>planning-with-files-zh · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-process"><span class="layer-dot"></span>工程过程层</div>
+    <h1 class="doc-title">Planning with Files（中文版）</h1>
+    <p class="doc-sub">复杂任务 / 项目开发的持久化规划工作流：Manus 三文件模式（task_plan/notes/交付物）+ 自动维护 STATUS/CHANGELOG/PROJECT_MAP，实现进度透明、冲突校验、可追溯的开发管理。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（启动 → 三文件 → 收尾）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 启动前必执行（最高优先级）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>精读 <code>.ai-workflow/planning/</code> 下 3 个核心文件（不存在则创建：STATUS / CHANGELOG / PROJECT_MAP）。</dd>
+            <dt>关卡</dt><dd>冲突校验——确认本次文件路径 / 功能与现有内容无冲突，禁止重复开发。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 维护三文件工作流</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>文件</dt><dd><code>task_plan.md</code>（目标/阶段/勾选/问题）、<code>notes.md</code>（研究/思路/上下文）、<code>[deliverable].md</code>（交付物）。</dd>
+            <dt>规则</dt><dd>只追加不覆盖、每阶段完成立即打勾、所有上下文入文件、关键决策前重读 task_plan。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 开发过程强制规范</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>规范</dt><dd>全程中文；适配 macOS（不用 Linux 专属指令）；Python 遵循 PEP8、JS/TS 遵循 ESLint；Python3 先激活 venv。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 完成后自动更新文档</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>增量补充（不改原结构）：STATUS 更新进度百分比；CHANGELOG 按语义化版本（Added/Fixed/Changed）；PROJECT_MAP 树状补充新增文件与接口。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>复杂 / 多步骤任务或项目开发</li>
+          <li>需要持久化进度追踪与状态管理</li>
+          <li>需要冲突校验、可追溯的开发管理</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>一次性简单问答（无需持久化规划）</li>
+          <li>不涉及文件修改的纯分析任务</li>
+          <li>不需要状态管理的轻量操作</li>
+          <li>项目缺少 STATUS/CHANGELOG/PROJECT_MAP 时不适用</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>.ai-workflow/planning/task_plan.md</code></li>
+          <li><code>.ai-workflow/planning/notes.md</code></li>
+          <li><code>.ai-workflow/planning/STATUS.md</code> / <code>CHANGELOG.md</code> / <code>PROJECT_MAP.md</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">608</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">21/25</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="meta-feature-dev.html">meta-feature-dev（规划前置）</a>
+      <a href="doc-troubleshooting.html">doc-troubleshooting（复盘归档）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 启动读三文件', sub: '产出：STATUS等' },
+    { label: '2. 冲突校验' },
+    { label: '3. 建三工作文件', sub: '产出：task_plan等' },
+    { label: '4. 开发执行规范', sub: '产出：交付物' },
+    { label: '5. 更新进度文档', sub: '产出：STATUS/LOG' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

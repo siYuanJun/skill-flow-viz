@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>doc-troubleshooting · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-debug"><span class="layer-dot"></span>排障修复层</div>
+    <h1 class="doc-title">Doc Troubleshooting（复盘归档）</h1>
+    <p class="doc-sub">技术问题排查全过程文档生成器：快速版（5 分钟填背景）+ 完整版（13 章节深度复盘）。覆盖多假设分析、根因、修复 diff、经验教训、Mermaid 排查流程图与 AI 技能提升要点。</p>
+  </header>
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从开始到完成，每一步做什么、产出什么一目了然。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <h2>执行全流程（快速版 / 完整版）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 选择强度</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>快速版</dt><dd>日常推荐，5 分钟填背景信息即生成核心章节。</dd>
+            <dt>完整版</dt><dd>关键复杂问题深度归档，13 章节全量复盘。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 问题背景与现象</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>内容</dt><dd>文档信息、初始任务、影响范围、完整错误日志、测试结果、服务状态。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 分析过程（核心）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>第一阶段列≥2 个假设（推理/尝试/结果/反思）；第二阶段深入调查（命令+输出）、关键转折点、通俗根因解释。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 解决方案 + 根因总结</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>最终方案（步骤+diff+配置）+ 验证（每步实际命令输出）；根因表格化、技术原理、对比分析。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 经验教训 + AI 技能提升</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>最佳实践/陷阱/方法论；必含 Mermaid 排查流程图 + 关键命令速查。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">06</span> 收尾章节 + 交付</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>内容</dt><dd>配置修改清单、参考资料、时间线、后续优化（短/中/长期）、贡献者。</dd>
+            <dt>产出</dt><dd><code>.ai-workflow/troubleshooting/[项目名]-[问题简述]-全过程.md</code></dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>解决了复杂技术问题（启动失败/依赖冲突/性能/Bug）</li>
+          <li>花费 &gt; 30 分钟</li>
+          <li>涉及复杂技术原理</li>
+          <li>可能影响多人 / 有复用价值</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>简单一次性问题无需归档</li>
+          <li>需先经 debug-* 完成实际排查，本 Skill 只做文档化</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>.ai-workflow/troubleshooting/[项目名]-[问题简述]-全过程.md</code></li>
+          <li>13 章节 + Mermaid 流程图 + 时间线</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">—</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">—</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">—</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">—</div><div class="m-label">Prompt</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="debug-backend-500.html">debug-backend-500（500 排查）</a>
+      <a href="debug-frontend-404.html">debug-frontend-404（404 排查）</a>
+      <a href="meta-self-iteration.html">meta-self-iteration（经验沉淀）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 收集背景现象', sub: '产出：问题背景' },
+    { label: '2. 多假设分析', sub: '产出：分析过程' },
+    { label: '3. 解决方案修复', sub: '产出：修复diff' },
+    { label: '4. 根因总结', sub: '产出：根因表' },
+    { label: '5. 经验教训' },
+    { label: '6. AI技能提升', sub: '产出：流程图' },
+    { label: '7. 后续优化建议' },
+    { label: '8. 归档输出', sub: '产出：全过程文档' }
+  ];
+
+  // 纯 HTML 流程图渲染
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>
