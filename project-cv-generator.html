@@ -17,8 +17,8 @@
   <header class="doc-head">
     <a class="back-link" href="index.html">← 返回总览</a>
     <div class="layer-tag l-industry"><span class="layer-dot"></span>行业方案层</div>
-    <h1 class="doc-title">Project CV Generator</h1>
-    <p class="doc-sub">项目简历生成器：7 个 Python 机械臂先行提取确定性数据（技术栈/技术亮点/测试质量/功能模块/技术挑战/贡献证据/工程方法论），AI 做业务价值映射与角色确认，产出 8 段式中文面试级项目简历 + 一页版 + 面试背诵特训包。支持 Java/PHP/Python/Go/Node/Vue/React，零幻觉。</p>
+    <h1 class="doc-title">项目价值提取工程 <span style="font-family:var(--font-mono);font-size:14px;color:var(--color-muted-fg);font-weight:400;">project-cv-generator</span></h1>
+    <p class="doc-sub">项目价值提取工程：7 个 Python 机械臂先行提取确定性数据（技术栈/技术亮点/测试质量/功能模块/技术挑战/贡献证据/工程方法论），AI 做业务价值映射与角色确认，产出 8 段式结构化项目价值文档 + 一页精华版 + 项目价值讲述包。支持 Java/PHP/Python/Go/Node/Vue/React，零幻觉。</p>
   </header>
   <section class="section">
     <h2>执行流程图（一眼看懂全流程）</h2>
@@ -100,7 +100,7 @@
         <summary><span class="step-num">08</span> AI 业务价值映射</summary>
         <div class="step-body">
           <dl class="kv">
-            <dt>参考</dt><dd><code>references/business-value-guide.md</code> 将技术指标映射为业务价值（面试官记忆线）。</dd>
+            <dt>参考</dt><dd><code>references/business-value-guide.md</code> 将技术指标映射为业务价值（听众价值记忆线）。</dd>
           </dl>
         </div>
       </details>
@@ -117,7 +117,7 @@
         <div class="step-body">
           <dl class="kv">
             <dt>动作</dt><dd>基于 7 个机械臂 JSON，AI 填语义描述，产出 3 份产物并写入被分析项目 <code>docs/</code>。</dd>
-            <dt>产出</dt><dd>① 8 段式项目简历（含「工程方法论与思维」）② 一页简历版 ③ 面试特训包（电梯演讲 + Top3 + STAR + 记忆卡）。</dd>
+            <dt>产出</dt><dd>① 8 段式项目价值文档（含「工程方法论与思维」）② 一页精华版 ③ 项目价值讲述包（电梯演讲 + Top3 价值亮点 + STAR 案例 + 记忆卡）。</dd>
             <dt>红线</dt><dd>脚本先行、数字真实、零幻觉（无数据不编造）、仅中文、三产物随项目走纳入版本管理。</dd>
           </dl>
         </div>
@@ -131,8 +131,8 @@
       <div class="card trigger">
         <h3>触发条件</h3>
         <ul>
-          <li>项目简历、项目总结、面试准备、背诵特训</li>
-          <li>简历亮点提炼、项目能力/方法论分析</li>
+          <li>项目价值梳理、项目总结、项目复盘、亮点提炼</li>
+          <li>项目能力 / 方法论分析、价值亮点呈现</li>
         </ul>
       </div>
       <div class="card boundary">
@@ -142,14 +142,14 @@
           <li>接口文档 → doc-api-overview</li>
           <li>业务风险分析 → doc-business-risk</li>
           <li>项目启动文档 → doc-project-startup</li>
-          <li>纯代码审查不产出简历</li>
+          <li>纯代码审查不产出价值文档</li>
         </ul>
       </div>
       <div class="card output">
         <h3>产出物（写入项目 docs/）</h3>
         <ul>
-          <li>8 段式结构化 Markdown 项目简历（仅中文）</li>
-          <li>一页简历版 + 面试特训包（3 份产物）</li>
+          <li>8 段式结构化 Markdown 项目价值文档（仅中文）</li>
+          <li>一页精华版 + 项目价值讲述包（3 份产物）</li>
         </ul>
       </div>
     </div>
@@ -188,7 +188,7 @@
     { label: '5. 技术挑战提取', sub: '产出：挑战JSON' },
     { label: '6. 贡献证据提取', sub: '产出：贡献JSON', isNew: true },
     { label: '7. 工程方法论提炼', sub: '产出：方法论JSON', isNew: true },
-    { label: '8. AI填列组装', sub: '产出：简历+一页版+特训包' }
+    { label: '8. AI填列组装', sub: '产出：价值文档+一页版+讲述包' }
   ];
 
   // 纯 HTML 流程图渲染
