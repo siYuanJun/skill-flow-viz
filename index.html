@@ -65,11 +65,34 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0;
-  overflow-x: auto;
   padding: 0 20px;
+}
+.top-nav-toggle {
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  width: 38px; height: 38px;
+  font-size: 18px;
+  color: var(--fg);
+  background: none;
+  border: 1px solid var(--border-active);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.top-nav-toggle:hover { background: rgba(139, 92, 246, 0.15); color: var(--secondary); }
+.top-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  overflow-x: auto;
+  flex: 1;
   scrollbar-width: none;
 }
-.top-nav-inner::-webkit-scrollbar { display: none; }
+.top-nav-links::-webkit-scrollbar { display: none; }
 .top-nav-item {
   flex-shrink: 0;
   padding: 14px 16px;
@@ -402,9 +425,44 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
   .section-heading, .layer-heading { font-size: 24px; }
   .card-grid-2 { grid-template-columns: 1fr; }
   .hero-stats { gap: 30px; }
-  .top-nav-item { padding: 12px 11px; font-size: 12px; }
   #nav-dots { display: none; }
   #doc-meta { display: none; }
+
+  /* Collapsible hamburger nav */
+  .top-nav-inner { justify-content: flex-start; }
+  .top-nav-toggle { display: inline-flex; }
+  .top-nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    background: rgba(15, 15, 35, 0.97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  }
+  .top-nav-links.open { max-height: 80vh; overflow-y: auto; }
+  .top-nav-item {
+    padding: 15px 22px;
+    font-size: 14px;
+    text-align: left;
+    width: 100%;
+    white-space: normal;
+  }
+  .top-nav-item::after { display: none; }
+  .top-nav-divider { display: none; }
+}
+
+/* Medium screens: keep horizontal bar but allow safe scroll */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .top-nav-links { justify-content: flex-start; padding: 0 8px; }
+  .top-nav-item { padding: 13px 11px; font-size: 12.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
@@ -419,21 +477,24 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
 <!-- Top Navigation Bar -->
 <nav id="top-nav">
   <div class="top-nav-inner">
-    <button class="top-nav-item active" data-target="hero">开篇</button>
-    <span class="top-nav-divider"></span>
-    <button class="top-nav-item" data-target="meta-eng">元工程层</button>
-    <span class="top-nav-divider"></span>
-    <button class="top-nav-item" data-target="meta-method">元方法论层</button>
-    <span class="top-nav-divider"></span>
-    <button class="top-nav-item" data-target="eng-process">工程过程层</button>
-    <span class="top-nav-divider"></span>
-    <button class="top-nav-item" data-target="debug">排障修复层</button>
-    <span class="top-nav-divider"></span>
-    <button class="top-nav-item" data-target="infra">基础设施层</button>
-    <span class="top-nav-divider"></span>
-    <button class="top-nav-item" data-target="industry">行业方案层</button>
-    <span class="top-nav-divider"></span>
-    <button class="top-nav-item" data-target="value">价值总览</button>
+    <button class="top-nav-toggle" id="top-nav-toggle" aria-label="切换导航菜单" aria-expanded="false">☰</button>
+    <div class="top-nav-links" id="top-nav-links">
+      <button class="top-nav-item active" data-target="hero">开篇</button>
+      <span class="top-nav-divider"></span>
+      <button class="top-nav-item" data-target="meta-eng">元工程层</button>
+      <span class="top-nav-divider"></span>
+      <button class="top-nav-item" data-target="meta-method">元方法论层</button>
+      <span class="top-nav-divider"></span>
+      <button class="top-nav-item" data-target="eng-process">工程过程层</button>
+      <span class="top-nav-divider"></span>
+      <button class="top-nav-item" data-target="debug">排障修复层</button>
+      <span class="top-nav-divider"></span>
+      <button class="top-nav-item" data-target="infra">基础设施层</button>
+      <span class="top-nav-divider"></span>
+      <button class="top-nav-item" data-target="industry">行业方案层</button>
+      <span class="top-nav-divider"></span>
+      <button class="top-nav-item" data-target="value">价值总览</button>
+    </div>
   </div>
 </nav>
 
@@ -502,6 +563,10 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
       <a class="skill-card reveal reveal-delay-1" href="meta-self-iteration.html">
         <div class="sc-name">meta-self-iteration <span class="sc-arrow">→</span></div>
         <div class="sc-desc">从会话历史蒸馏个人 playbook：3 阶 Loop + 增量 checkpoint + Maker/Checker 防幻觉</div>
+      </a>
+      <a class="skill-card reveal reveal-delay-2" href="feature-distiller.html">
+        <div class="sc-name">feature-distiller <span class="sc-arrow">→</span></div>
+        <div class="sc-desc">从任意项目蒸馏单功能/模块为可复用 HOW-TO 文档（实现逻辑+避坑，file:line 溯源）</div>
       </a>
     </div>
   </div>
@@ -774,6 +839,21 @@ function scrollToSection(targetId) {
 
 dots.forEach(dot => dot.addEventListener('click', () => scrollToSection(dot.dataset.target)));
 topNavItems.forEach(item => item.addEventListener('click', () => scrollToSection(item.dataset.target)));
+
+// Mobile hamburger toggle for top nav
+const topNavToggle = document.getElementById('top-nav-toggle');
+const topNavLinks = document.getElementById('top-nav-links');
+function setNavOpen(open) {
+  topNavLinks.classList.toggle('open', open);
+  topNavToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+topNavToggle.addEventListener('click', () => {
+  setNavOpen(!topNavLinks.classList.contains('open'));
+});
+// Close menu after selecting an item (mobile)
+topNavItems.forEach(item => item.addEventListener('click', () => setNavOpen(false)));
+// Close menu when resizing up to desktop
+window.addEventListener('resize', () => { if (window.innerWidth > 768) setNavOpen(false); });
 
 // Reveal animation
 const revealObserver = new IntersectionObserver((entries) => {

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>feature-distiller · 功能模块蒸馏器 可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+<style>
+  .fh-node.fh-new { border-color:#16a34a; box-shadow:0 0 0 2px rgba(22,163,74,.18); }
+  .fh-node.fh-new small { color:#16a34a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-meta"><span class="layer-dot"></span>研发层 · 功能蒸馏</div>
+    <h1 class="doc-title">功能模块蒸馏器 <span style="font-family:var(--font-mono);font-size:14px;color:var(--color-muted-fg);font-weight:400;">feature-distiller</span></h1>
+    <p class="doc-sub">从任意项目里蒸馏单个功能 / 模块（如 RAG 检索链路、知识库、鉴权、支付）为自包含的可复用 HOW-TO 文档——含实现逻辑、数据流、棘手问题处理方法、避坑清单，全部带 file:line，从源头减少 AI 幻觉与重复踩坑。机械臂先行（scan_feature.py，纯标准库），AI 只填语义列。</p>
+  </header>
+
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从目标功能到可复用文档，5 步闭环。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>执行全流程（5 步 SOP）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 扫描（机械臂先行）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>脚本</dt><dd><code>scripts/scan_feature.py --project &lt;p&gt; --feature &lt;f&gt; --output scan.json</code> 多语言扫描，提取 <code>matched_files / entry_points / definitions / imports / error_handling / guards / markers(TODO·FIXME·HACK·XXX) / bare_excepts</code>。</dd>
+            <dt>红线</dt><dd>全部位置带 <code>file:line</code>，确定性数据零编造。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 填语义列（实现逻辑 / 数据流）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>AI 基于 scan.json 描述「实现逻辑 / 数据流」，只描述 JSON 中存在的内容。</dd>
+            <dt>红线</dt><dd>无来源不写；不读取源码就不下结论。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 棘手问题处理</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>提炼</dt><dd>从 <code>error_handling</code>（try/except/catch）与 <code>guards</code>（is None / empty 检查）提炼边界、异常、并发处理策略。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 避坑清单</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>提炼</dt><dd>从 <code>markers</code>（原作者显式标记）与 <code>bare_except / not_implemented</code>（隐性雷区）提炼「不要做什么、为什么」。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 组装文档</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>套用 <code>references/output-template.md</code>，产出 <code>&lt;feature&gt;-distilled.md</code>。</dd>
+            <dt>产出</dt><dd>写入 <code>&lt;项目&gt;/.ai-workflow/feature-distiller/</code>，含 5 段：功能定位 / 实现逻辑与数据流 / 棘手问题处理 / 避坑清单 / 跨项目复用指引。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>想把一个已实现功能的「做法 + 踩坑」固化成可复用文档</li>
+          <li>接手他人项目，想快速掌握某模块实现要点与雷区</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界（Out of scope）</h3>
+        <ul>
+          <li>整库蒸馏 → repo2skill / repo-to-skill</li>
+          <li>项目价值简历 → project-cv-generator</li>
+          <li>代码调用图谱 → graphify</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>&lt;feature&gt;-distilled.md</code>（5 段 HOW-TO，全部 file:line 溯源）</li>
+          <li>供其他项目直接复用，无需重读原项目全部源码</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标（yao 自检）</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">346</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">95</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">91</div><div class="m-label">Prompt</div></div>
+      <div class="metric"><div class="m-val">92</div><div class="m-label">System</div></div>
+      <div class="metric"><div class="m-val">5/5</div><div class="m-label">Conform</div></div>
+      <div class="metric"><div class="m-val">2</div><div class="m-label">Tests</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="../skills/graphify-8/README.md">graphify（代码图谱，辅助理解调用关系）</a>
+      <a href="project-cv-generator.html">project-cv-generator（项目价值提取）</a>
+      <a href="meta-self-iteration.html">meta-self-iteration（避坑经验固化进跨项目 playbook）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 扫描', sub: 'scan_feature.py → scan.json' },
+    { label: '2. 填语义列', sub: '实现逻辑 / 数据流' },
+    { label: '3. 棘手问题处理', sub: 'error_handling + guards' },
+    { label: '4. 避坑清单', sub: 'markers + bare_except' },
+    { label: '5. 组装文档', sub: 'output-template.md → distilled.md' }
+  ];
+
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>
