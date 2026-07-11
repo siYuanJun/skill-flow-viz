@@ -54,7 +54,7 @@
 | `project-cv-generator.html` | project-cv-generator | 行业解决方案层 |
 | `ai-digital-employee.html` | ai-digital-employee | 行业解决方案层 |
 
-**待补 HTML 的核心 Skill**（主表已有、本目录暂无对应单页）：`yao-meta-skill`。
+**待补 HTML 的核心 Skill**：当前主表所有核心 Skill 均已生成对应可视化单页，无待补项。
 
 ## 目录结构
 
