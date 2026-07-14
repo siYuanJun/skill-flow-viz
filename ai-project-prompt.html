@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ai-project-prompt · 产品PRD基座工程 可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+<style>
+  /* 确认门控节点高亮（琥珀） */
+  .fh-node.fh-gate { border-color:#FBBF24; box-shadow:0 0 0 2px rgba(251,191,36,.18); }
+  .fh-node.fh-gate small { color:#FBBF24; }
+  /* 大脑节点高亮（紫） */
+  .fh-node.fh-brain { border-color:#8B5CF6; box-shadow:0 0 0 2px rgba(139,92,246,.16); }
+  .fh-node.fh-brain small { color:#8B5CF6; }
+  /* 交叉校验节点高亮（绿） */
+  .fh-node.fh-check { border-color:#10B981; box-shadow:0 0 0 2px rgba(16,185,129,.16); }
+  .fh-node.fh-check small { color:#10B981; }
+
+  /* 三个大脑对比卡 */
+  .brain-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(248px,1fr)); gap:14px; }
+  .brain-card {
+    border:1px solid var(--color-border); border-radius:var(--radius);
+    background:var(--color-surface); padding:16px; box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--color-accent);
+  }
+  .brain-card h3 { margin:0 0 6px; font-size:14px; font-weight:600; }
+  .brain-card .b-sub { font-size:12px; color:var(--color-muted-fg); font-family:var(--font-mono); margin-bottom:10px; }
+  .brain-card ol { margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:var(--color-foreground); }
+  .brain-card ol li b { color:var(--color-secondary); }
+
+  /* 判断驱动对比 */
+  .vs-grid { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+  .vs-card { border:1px solid var(--color-border); border-radius:var(--radius); padding:14px 16px; background:var(--color-surface); }
+  .vs-card.bad { border-left:3px solid var(--color-destructive); }
+  .vs-card.good { border-left:3px solid var(--color-success); }
+  .vs-card h4 { margin:0 0 6px; font-size:13px; }
+  .vs-card.bad h4 { color:var(--color-destructive); }
+  .vs-card.good h4 { color:var(--color-success); }
+  .vs-card p { margin:0; font-size:12.5px; line-height:1.6; color:var(--color-muted-fg); }
+
+  /* 形态自适应徽标 */
+  .form-badges { display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
+  .form-badge { font-size:12px; padding:3px 9px; border-radius:999px; font-family:var(--font-mono);
+    border:1px solid var(--color-border); color:var(--color-secondary); background:var(--color-surface); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-meta"><span class="layer-dot"></span>研发层 · 产品文档基座</div>
+    <h1 class="doc-title">产品 PRD 基座工程 <span style="font-family:var(--font-mono);font-size:14px;color:var(--color-muted-fg);font-weight:400;">ai-project-prompt · V1.0.0</span></h1>
+    <p class="doc-sub">从一个产品想法，交互式产出三层产品文档基座：<b>产品PRD → 技术架构 → 数据模型概要</b>。每层由专属「产品意识大脑」驱动——先溶解理解、再判断、再产出，<b>每步显式确认是否继续</b>，并按产品形态自适应文档结构。纯提示词技能（无 Python 脚本），含 evals 三件套 + yao 自检门控。</p>
+  </header>
+
+  <section class="section">
+    <h2>三层文档引擎（一眼看懂）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从产品想法到三层文档基座，七节点闭环。琥珀色为「确认门控」节点——AI 不擅自一口气全产出，必须等你确认才进入下一层。下方时间轴为逐步详情。</p>
+    <div class="flow-board" id="app-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="app-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="app-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>核心设计：不是模板生成器，是产品意识大脑</h2>
+    <p class="doc-sub" style="margin-bottom:16px;">三个大脑结构一致：<b>溶解理解 → 做判断 → 产出文档</b>，每个判断都明确、具体、有理由。判断驱动文档，而非模板填空。</p>
+    <div class="vs-grid" style="margin-bottom:18px;">
+      <div class="vs-card bad">
+        <h4>✗ 模板填充式</h4>
+        <p>直接套格式写文档，不理解就输出；判断模糊、P0/P1/P2 无理由、技术选型无 trade-off、实体归属含糊。</p>
+      </div>
+      <div class="vs-card good">
+        <h4>✓ 判断驱动式（本 Skill）</h4>
+        <p>每步先展示判断（价值闭环 / 优先级划分 / 本期不做什么 / 不确定项），确认后再产出；判断明确、清晰、具体、可落地。</p>
+      </div>
+    </div>
+    <div class="brain-grid">
+      <div class="brain-card">
+        <h3>产品思维引擎</h3>
+        <div class="b-sub">references/product-prd-brain.md</div>
+        <ol>
+          <li>溶解：谁的什么问题 · 价值闭环 · 核心实体 · <b>形态约束</b></li>
+          <li>识别骨架：核心价值 / 支撑 / 增强 → P0/P1/P2</li>
+          <li>做判断：去掉它主闭环走不通=P0；每「不做」必须有理由</li>
+          <li>识别状态边界 · 产出 [产品名]-PRD.md</li>
+        </ol>
+      </div>
+      <div class="brain-card">
+        <h3>技术思维引擎</h3>
+        <div class="b-sub">references/tech-architecture-brain.md</div>
+        <ol>
+          <li>溶解：形态定层数 · 团队背景是硬约束 · 已有系统是锚点</li>
+          <li>做选型判断：为什么选 · 代价是什么 · <b>换的代价多大</b></li>
+          <li>高代价决策（如数据库）需更充分理由</li>
+          <li>产出 [产品名]-技术架构.md</li>
+        </ol>
+      </div>
+      <div class="brain-card">
+        <h3>数据思维引擎</h3>
+        <div class="b-sub">references/data-model-brain.md</div>
+        <ol>
+          <li>溶解：从 PRD 提取流动实体 · 按业务域分组</li>
+          <li>判定归属：谁写入 · 谁读取 · 存储形态（关系/NoSQL/事件流）</li>
+          <li>识别状态流转、归属模糊地带</li>
+          <li>产出 [产品名]-数据模型概要.md（不含 DDL）</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>执行全流程（7 步交互式 SOP）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 收集产品信息（交互入口）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>交互</dt><dd>触发后先收集：产品名称（用于命名）/ 项目代号 / 产品形态（Web·App·CLI·API·SDK·小程序·桌面·对话式·游戏·IoT）/ 一句话定位 / 目标用户 / 核心功能想法（3-8 项）/ 系统拓扑 / 已知约束。缺失的主动提 2-3 个关键问题，不猜。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 产出产品 PRD（先判断，再产出）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>加载</dt><dd><code>references/product-prd-brain.md</code> 产品思维引擎。</dd>
+            <dt>先展示判断</dt><dd>核心价值闭环是什么？P0/P1/P2 划分逻辑？本期不做什么及理由？不确定什么需你补充？</dd>
+            <dt>产出</dt><dd><code>[产品名]-PRD.md</code>，开头标注产品名 / 代号 / 形态 / 版本 / 日期。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 确认门控 ⏸ 是否继续</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>门控</dt><dd>产出 PRD 后<b>必须询问</b>是否继续产出技术架构。确认 → 进入 04；说不 → 结束（你可之后单独触发架构产出）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 产出技术架构（先判断，再产出）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>加载</dt><dd><code>references/tech-architecture-brain.md</code> 技术思维引擎。</dd>
+            <dt>先展示判断</dt><dd>产品有几层技术栈？最关键的 3 个技术决策及理由？最大技术风险是什么？</dd>
+            <dt>产出</dt><dd><code>[产品名]-技术架构.md</code>。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 确认门控 ⏸ 是否继续</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>门控</dt><dd>产出架构后<b>必须询问</b>是否继续产出数据模型概要。确认 → 进入 06；说不 → 结束。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">06</span> 产出数据模型概要（先洞察，再产出）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>加载</dt><dd><code>references/data-model-brain.md</code> 数据思维引擎。</dd>
+            <dt>先展示洞察</dt><dd>识别出多少业务域 / 核心实体？哪些实体有状态流转（几个状态）？数据归属有无模糊地带？</dd>
+            <dt>产出</dt><dd><code>[产品名]-数据模型概要.md</code>（不含 DDL）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">07</span> 总结交叉校验</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>校验</dt><dd>PRD 功能模块 → 技术架构是否都有对应目录？PRD 业务实体 → 数据模型是否覆盖完整？数据模型状态枚举 → PRD 状态机是否一致？告知你校验结果。</dd>
+            <dt>单独产出</dt><dd>也可只说「帮我产出技术架构/数据模型」——先确认有无现成 PRD 可参考，有则基于 PRD，无则先收集信息。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>从产品想法搭建三层文档基座（PRD / 技术架构 / 数据模型）</li>
+          <li>单独产出其中某一层</li>
+          <li>产品形态自适应的文档结构需求</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界（Out of scope）</h3>
+        <ul>
+          <li>单个功能 PRD（不涉及完整产品）</li>
+          <li>纯代码审查 / 已有文档润色</li>
+          <li>把框架源码蒸馏成开发契约 → feature-distiller</li>
+          <li>画代码调用关系图谱 → graphify</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>[产品名]-PRD.md</code>（做什么 + 为什么）</li>
+          <li><code>[产品名]-技术架构.md</code>（怎么做）</li>
+          <li><code>[产品名]-数据模型概要.md</code>（数据长什么样 + 归谁管，不含 DDL）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>产品形态自适应</h3>
+        <div class="form-badges">
+          <span class="form-badge">Web</span><span class="form-badge">App</span><span class="form-badge">CLI</span>
+          <span class="form-badge">API</span><span class="form-badge">SDK</span><span class="form-badge">小程序</span>
+          <span class="form-badge">桌面</span><span class="form-badge">对话式</span><span class="form-badge">游戏</span><span class="form-badge">IoT</span>
+        </div>
+        <p style="margin-top:10px;font-size:13.5px;">CLI 不写页面结构，SDK 不写用户角色，API 不写 UI 组件——按形态与使用场景落地文档。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标（yao 自检 · 升级后全绿）</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">837</div><div class="m-label">Token</div></div>
+      <div class="metric"><div class="m-val">90</div><div class="m-label">Govern</div></div>
+      <div class="metric"><div class="m-val">100</div><div class="m-label">Intent</div></div>
+      <div class="metric"><div class="m-val">96</div><div class="m-label">Prompt</div></div>
+      <div class="metric"><div class="m-val">92</div><div class="m-label">System</div></div>
+      <div class="metric"><div class="m-val">5/5</div><div class="m-label">Conform</div></div>
+      <div class="metric"><div class="m-val">纯提示词</div><div class="m-label">Python</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="AI-DEV-OPRO.html">AI Dev Workflow（基于 PRD 进入 7 步工程化开发）</a>
+      <a href="feature-distiller.html">feature-distiller（同为结构化产出能力，蒸馏框架开发契约）</a>
+      <a href="meta-agent-collaboration.html">meta-agent-collaboration（需求理解上游协作）</a>
+      <a href="project-cv-generator.html">project-cv-generator（项目价值提取工程）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  // 三层文档引擎：七节点，门控步高亮
+  var nodes = [
+    { label: '1. 交互入口层', sub: '收集产品信息', kind: '' },
+    { label: '2. 产品PRD大脑', sub: 'product-prd-brain', kind: 'brain' },
+    { label: '⏸ 确认门控', sub: '是否继续？', kind: 'gate' },
+    { label: '3. 技术架构大脑', sub: 'tech-architecture-brain', kind: 'brain' },
+    { label: '⏸ 确认门控', sub: '是否继续？', kind: 'gate' },
+    { label: '4. 数据模型大脑', sub: 'data-model-brain', kind: 'brain' },
+    { label: '5. 交叉校验', sub: '三层对齐', kind: 'check' }
+  ];
+
+  function cls(kind) {
+    if (kind === 'gate') return 'fh-node fh-gate';
+    if (kind === 'brain') return 'fh-node fh-brain';
+    if (kind === 'check') return 'fh-node fh-check';
+    return 'fh-node';
+  }
+
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    html += '<div class="' + cls(n.kind) + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('app-board');
+  var canvas = document.getElementById('app-canvas');
+  var zoomLabel = document.getElementById('app-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>
