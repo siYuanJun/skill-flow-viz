@@ -483,11 +483,15 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
       <span class="top-nav-divider"></span>
       <button class="top-nav-item" data-target="meta-eng">元工程层</button>
       <span class="top-nav-divider"></span>
+      <button class="top-nav-item" data-target="eng-protocol">工程协议层</button>
+      <span class="top-nav-divider"></span>
       <button class="top-nav-item" data-target="meta-method">元方法论层</button>
       <span class="top-nav-divider"></span>
       <button class="top-nav-item" data-target="eng-process">工程过程层</button>
       <span class="top-nav-divider"></span>
       <button class="top-nav-item" data-target="debug">排障修复层</button>
+      <span class="top-nav-divider"></span>
+      <button class="top-nav-item" data-target="security">安全扫描层</button>
       <span class="top-nav-divider"></span>
       <button class="top-nav-item" data-target="infra">基础设施层</button>
       <span class="top-nav-divider"></span>
@@ -502,9 +506,11 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
 <nav id="nav-dots">
   <button class="nav-dot active" data-target="hero" title="开篇"></button>
   <button class="nav-dot" data-target="meta-eng" title="元工程层"></button>
+  <button class="nav-dot" data-target="eng-protocol" title="工程协议层"></button>
   <button class="nav-dot" data-target="meta-method" title="元方法论层"></button>
   <button class="nav-dot" data-target="eng-process" title="工程过程层"></button>
   <button class="nav-dot" data-target="debug" title="排障修复层"></button>
+  <button class="nav-dot" data-target="security" title="安全扫描层"></button>
   <button class="nav-dot" data-target="infra" title="基础设施层"></button>
   <button class="nav-dot" data-target="industry" title="行业方案层"></button>
   <button class="nav-dot" data-target="value" title="价值总览"></button>
@@ -527,17 +533,17 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
   <div class="container">
     <div class="hero-badge reveal">SKILLFLOW VIZ · 核心 SKILL 工程集群</div>
     <h1 class="hero-title reveal reveal-delay-1">核心 Skill 工程<br>执行流程总览</h1>
-    <p class="hero-sub reveal reveal-delay-2">欢迎浏览 👋 这里汇集了 21 个核心 Skill 工程的执行流程可视化，逐一以 HTML 呈现「它怎么执行」，并按层次分组，方便您快速定位与理解。</p>
+    <p class="hero-sub reveal reveal-delay-2">欢迎浏览 👋 这里汇集了 20 个核心 Skill 工程的执行流程可视化，逐一以 HTML 呈现「它怎么执行」，并按 8 大层次分组，方便您快速定位与理解。</p>
     <div class="hero-note reveal reveal-delay-3">
       温馨说明：每张 HTML 都是便于快速入门的「导览解说版」；每个 Skill 背后其实都是由 <code>SKILL.md</code> + 脚本 + 策略 + 约束等多要素组成的完整项目体。样式由 <code>ui-ux-pro-max</code> 统一设计系统驱动。
     </div>
     <div class="hero-stats reveal reveal-delay-3">
       <div class="hero-stat">
-          <div class="hero-stat-num">21</div>
+          <div class="hero-stat-num">20</div>
           <div class="hero-stat-label">核心 Skill 可视化</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">7</div>
+        <div class="hero-stat-num">8</div>
         <div class="hero-stat-label">软件工程层次</div>
       </div>
       <div class="hero-stat">
@@ -560,17 +566,29 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
         <div class="sc-name">project-skill-builder <span class="sc-arrow">→</span></div>
         <div class="sc-desc">项目 Skill 工程惯例书：目录布局 / 产出隔离 / SKILL.md 规范 / 质检闭环</div>
       </a>
-      <a class="skill-card reveal reveal-delay-1" href="meta-self-iteration.html">
-        <div class="sc-name">meta-self-iteration <span class="sc-arrow">→</span></div>
-        <div class="sc-desc">从会话历史蒸馏个人 playbook：3 阶 Loop + 增量 checkpoint + Maker/Checker 防幻觉</div>
-      </a>
-      <a class="skill-card reveal reveal-delay-2" href="feature-distiller.html">
+      <a class="skill-card reveal reveal-delay-1" href="feature-distiller.html">
         <div class="sc-name">feature-distiller <span class="sc-arrow">→</span></div>
         <div class="sc-desc">V2 框架开发契约抽取引擎：双模式（全局总契约/模块补充）+ 全维度语义扫描 + 单文件 10 节契约 + 🔴🟡⚫三级约束 + 自检门控</div>
       </a>
-      <a class="skill-card reveal reveal-delay-3" href="methodology-distiller.html">
-        <div class="sc-name">methodology-distiller <span class="sc-arrow">→</span></div>
-        <div class="sc-desc">通用工程方法论蒸馏器：4 阶段管道 + 12 维度机械臂扫描 + 4 道防专有泄漏闸门 + Maker/Checker 防幻觉，从源码提取可复用方法论 Skill</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 工程协议层 ==================== -->
+<section class="section section--tall" id="eng-protocol" style="--lc: #06B6D4;">
+  <div class="glow-orb" style="width:300px;height:300px;background:#06B6D4;top:12%;right:6%;"></div>
+  <div class="container">
+    <div class="section-title reveal">02 · ENGINEERING PROTOCOL</div>
+    <div class="layer-heading reveal reveal-delay-1">工程协议层</div>
+    <div class="layer-sub reveal reveal-delay-1">多 Agent 并行 / 串行开发执行引擎</div>
+    <div class="card-grid card-grid-2">
+      <a class="skill-card reveal" href="UEP.html">
+        <div class="sc-name">UEP <span class="sc-arrow">→</span></div>
+        <div class="sc-desc">通用工程协议：自动化项目管理 + 多 Agent 协作，5 步 Workflow（init→scan→worker→fix→assembly）经 STATE.json + 不可变日志追踪、自动拼装交付物</div>
+      </a>
+      <a class="skill-card reveal reveal-delay-1" href="ai-dev-workflow.html">
+        <div class="sc-name">ai-dev-workflow <span class="sc-arrow">→</span></div>
+        <div class="sc-desc">人工确认闭环门控的串行全栈开发脚手架：7 步流程（init→prd-to-tech→plan→executor→validator→closer→git），支持断点续传</div>
       </a>
     </div>
   </div>
@@ -580,7 +598,7 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
 <section class="section section--tall" id="meta-method" style="--lc: #A78BFA;">
   <div class="glow-orb" style="width:320px;height:320px;background:var(--secondary);bottom:10%;left:8%;"></div>
   <div class="container">
-    <div class="section-title reveal">02 · META METHODOLOGY</div>
+    <div class="section-title reveal">03 · META METHODOLOGY</div>
     <div class="layer-heading reveal reveal-delay-1">元方法论层</div>
     <div class="layer-sub reveal reveal-delay-1">教 AI 怎么思考 / 做事</div>
     <div class="card-grid card-grid-2">
@@ -596,6 +614,10 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
         <div class="sc-name">ai-project-prompt <span class="sc-arrow">→</span></div>
         <div class="sc-desc">产品 PRD 基座工程：交互式产出三层文档（产品PRD→技术架构→数据模型），每步确认门控 + 三个大脑判断驱动 + 产品形态自适应</div>
       </a>
+      <a class="skill-card reveal reveal-delay-3" href="meta-self-iteration.html">
+        <div class="sc-name">meta-self-iteration <span class="sc-arrow">→</span></div>
+        <div class="sc-desc">AI 自我进化：3 阶段 Loop（采集→提炼→验证）+ Maker/Checker 防幻觉，从会话历史自动生成个人 playbook</div>
+      </a>
     </div>
   </div>
 </section>
@@ -604,9 +626,9 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
 <section class="section section--tall" id="eng-process" style="--lc: #FBBF24;">
   <div class="glow-orb" style="width:360px;height:360px;background:var(--accent);top:8%;right:4%;"></div>
   <div class="container">
-    <div class="section-title reveal">03 · ENGINEERING PROCESS</div>
+    <div class="section-title reveal">04 · ENGINEERING PROCESS</div>
     <div class="layer-heading reveal reveal-delay-1">工程过程层</div>
-    <div class="layer-sub reveal reveal-delay-1">执行日常开发任务（含开发执行引擎）</div>
+    <div class="layer-sub reveal reveal-delay-1">执行日常开发任务</div>
     <div class="card-grid card-grid-2">
       <a class="skill-card reveal" href="planning-with-files-zh.html">
         <div class="sc-name">planning-with-files-zh <span class="sc-arrow">→</span></div>
@@ -620,14 +642,6 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
         <div class="sc-name">api-test-harness <span class="sc-arrow">→</span></div>
         <div class="sc-desc">接口机械臂测试：grep 提取真实参数 + Python + curl，四道防幻觉红线</div>
       </a>
-      <a class="skill-card reveal reveal-delay-3" href="AI-DEV-OPRO.html">
-        <div class="sc-name">AI-DEV-OPRO（ai-dev-workflow） <span class="sc-arrow">→</span></div>
-        <div class="sc-desc">人工确认闭环门控的工程化开发脚手架：5 步强制逐模块规格确认→开发→自审→测试→闭环</div>
-      </a>
-      <a class="skill-card reveal reveal-delay-3" href="UEP.html">
-        <div class="sc-name">UEP <span class="sc-arrow">→</span></div>
-        <div class="sc-desc">通用工程协议：自动化项目管理 + 多 Agent 协作，5 步 Workflow（init→scan→worker→fix→assembly）经 STATE.json + 不可变日志追踪、自动拼装交付物</div>
-      </a>
     </div>
   </div>
 </section>
@@ -636,7 +650,7 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
 <section class="section section--tall" id="debug" style="--lc: #EF4444;">
   <div class="glow-orb" style="width:300px;height:300px;background:var(--danger);bottom:8%;right:8%;"></div>
   <div class="container">
-    <div class="section-title reveal">04 · DEBUG & REPAIR</div>
+    <div class="section-title reveal">05 · DEBUG & REPAIR</div>
     <div class="layer-heading reveal reveal-delay-1">排障修复层</div>
     <div class="layer-sub reveal reveal-delay-1">定位与解决问题</div>
     <div class="card-grid card-grid-2">
@@ -664,11 +678,22 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
   </div>
 </section>
 
+<!-- ==================== 安全扫描层 ==================== -->
+<section class="section section--tall" id="security" style="--lc: #F59E0B;">
+  <div class="glow-orb" style="width:300px;height:300px;background:#F59E0B;top:12%;right:6%;"></div>
+  <div class="container">
+    <div class="section-title reveal">06 · SECURITY SCANNING</div>
+    <div class="layer-heading reveal reveal-delay-1">安全扫描层</div>
+    <div class="layer-sub reveal reveal-delay-1">敏感信息检测与泄露防护</div>
+    <p class="section-sub reveal reveal-delay-2" style="margin-top:12px;">本层含 <code>local-path-scanner</code>（本地路径泄露扫描）、<code>secret-leak-check</code>（密钥泄露检测）2 个核心 Skill，可视化 HTML 待生成。</p>
+  </div>
+</section>
+
 <!-- ==================== 基础设施层 ==================== -->
 <section class="section section--tall" id="infra" style="--lc: #10B981;">
   <div class="glow-orb" style="width:320px;height:320px;background:var(--success);top:10%;left:6%;"></div>
   <div class="container">
-    <div class="section-title reveal">05 · INFRASTRUCTURE</div>
+    <div class="section-title reveal">07 · INFRASTRUCTURE</div>
     <div class="layer-heading reveal reveal-delay-1">基础设施层</div>
     <div class="layer-sub reveal reveal-delay-1">容器 / 部署 / 上下文工程</div>
     <div class="card-grid card-grid-2">
@@ -680,6 +705,14 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
         <div class="sc-name">rag-context-engine <span class="sc-arrow">→</span></div>
         <div class="sc-desc">RAG 上下文工程规范：Write/Select/Compress/Isolate 四策略 + 8 大原则</div>
       </a>
+      <div class="skill-card reveal reveal-delay-2" style="--lc: #6366F1; opacity: 0.6;">
+        <div class="sc-name">graphify <span style="font-size:11px;color:var(--accent);margin-left:8px;">可视化待生成</span></div>
+        <div class="sc-desc">代码库知识图谱生成器：tree-sitter AST 本地解析（40+语言）+ Leiden 社区检测 + 三类图查询，PyPI 安装（graphifyy）。GitHub: Graphify-Labs/graphify</div>
+      </div>
+      <div class="skill-card reveal reveal-delay-3" style="--lc: #6366F1; opacity: 0.6;">
+        <div class="sc-name">codegraph <span style="font-size:11px;color:var(--accent);margin-left:8px;">可视化待生成</span></div>
+        <div class="sc-desc">代码智能知识图谱 MCP 服务：SQLite 知识图谱 + 原生 Rust，32 语言 + 44 MCP 工具，子秒级索引。npm: @suatkocar/codegraph</div>
+      </div>
     </div>
   </div>
 </section>
@@ -688,7 +721,7 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
 <section class="section section--tall" id="industry" style="--lc: #FBBF24;">
   <div class="glow-orb" style="width:300px;height:300px;background:var(--accent);bottom:10%;left:8%;"></div>
   <div class="container">
-    <div class="section-title reveal">06 · INDUSTRY SOLUTIONS</div>
+    <div class="section-title reveal">08 · INDUSTRY SOLUTIONS</div>
     <div class="layer-heading reveal reveal-delay-1">行业方案层</div>
     <div class="layer-sub reveal reveal-delay-1">产品级架构与垂直交付</div>
     <div class="card-grid card-grid-2">
@@ -704,7 +737,7 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
 
     <!-- 落地场景 × 可实施的产品价值 -->
     <div class="industry-value reveal reveal-delay-2" style="margin-top:52px;">
-      <div class="section-title" style="margin-bottom:10px;">06-1 · 落地场景 × 可实施的产品价值</div>
+      <div class="section-title" style="margin-bottom:10px;">08-1 · 落地场景 × 可实施的产品价值</div>
       <div class="layer-heading" style="font-size:22px;margin-bottom:6px;">这套工程底座，实施后能产出什么</div>
       <p class="section-sub" style="margin-bottom:28px;max-width:880px;">行业方案层不是两个孤立 Skill，而是这套工程集群「<strong>可被实施、能产生真实产品价值</strong>」的证明层。下表按「落地场景（行业 / Agent 应用形态）→ 实施后能交付的产品价值形式 → 核心支撑 Skill」给出映射——所有能力均已在多个真实生产项目中完整实践验证，并非概念假设：</p>
 
@@ -725,8 +758,8 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
           </tr>
           <tr>
             <td>已有代码库的能力复用与知识沉淀</td>
-            <td>代码知识图谱（40+ 语言 AST 本地解析，零 API 成本）+ 结构化项目价值文档 + 跨项目可复用 playbook</td>
-            <td><code>graphify</code> · <code>project-cv-generator</code> · <code>meta-self-iteration</code></td>
+            <td>代码知识图谱 + 结构化项目价值文档 + 跨项目可复用 playbook</td>
+            <td><code>project-cv-generator</code> · <code>meta-self-iteration</code> · <code>feature-distiller</code></td>
           </tr>
           <tr>
             <td>可信赖交付（防幻觉 / 可审计）</td>
@@ -746,56 +779,61 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
   <div class="glow-orb" style="width:400px;height:400px;background:var(--primary);top:6%;right:10%;"></div>
   <div class="glow-orb" style="width:300px;height:300px;background:var(--accent);bottom:8%;left:10%;"></div>
   <div class="container">
-    <div class="section-title reveal">07 · VALUE OVERVIEW</div>
+    <div class="section-title reveal">09 · VALUE OVERVIEW</div>
     <h2 class="section-heading reveal reveal-delay-1">生命周期覆盖 · 这份工程集群的价值</h2>
-    <p class="section-sub reveal reveal-delay-2">这 21 个核心 Skill 不是零散工具，而是一套<strong>覆盖软件工程全生命周期的工程集群</strong>——从「怎么提需求、怎么设计」，到「怎么并行开发、怎么测试排障、怎么容器化部署、怎么沉淀经验」，每一环都有专门的 Skill 工程支撑。下方按七大层次逐层列出对应的核心 Skill，并标注其在本目录的可视化情况：</p>
+    <p class="section-sub reveal reveal-delay-2">这些核心 Skill 不是零散工具，而是一套<strong>覆盖软件工程全生命周期的工程集群</strong>——从「怎么提需求、怎么设计」，到「怎么并行开发、怎么测试排障、怎么容器化部署、怎么沉淀经验」，每一环都有专门的 Skill 工程支撑。下方按八大层次逐层列出对应的核心 Skill，并标注其在本目录的可视化情况：</p>
 
     <table class="cover-table reveal reveal-delay-2">
       <thead>
-        <tr><th>七大层次</th><th>对应核心 Skill 工程（职责）</th><th>本目录</th></tr>
+        <tr><th>八大层次</th><th>对应核心 Skill 工程（职责）</th><th>本目录</th></tr>
       </thead>
       <tbody>
         <tr>
           <td>元工程层<span class="ct-sub">管理 Skill 工程本身</span></td>
-          <td><code>project-skill-builder</code>：五大惯例 + 四种设计模式 + 质检闭环 · <code>feature-distiller</code>：框架契约蒸馏 · <code>methodology-distiller</code>：源码方法论蒸馏（4 阶段管道 + 4 道防泄漏闸门）</td>
-          <td class="cover-yes">已可视化</td>
+          <td><code>project-skill-builder</code>：五大惯例 + 四种设计模式 + 质检闭环 · <code>feature-distiller</code>：框架契约蒸馏 V2 · <code>methodology-distiller</code>：源码方法论蒸馏（4 阶段管道）· <code>methodology-provenance-audit</code>：方法论渊源审计 · <code>skill-flow-viz-generator</code>：可视化生成器 · <code>blocked-core-skill-visualizer</code>：补全被屏蔽 Skill 可视化</td>
+          <td class="cover-yes">已可视化 2/6<br><span class="ct-sub">其余待生成</span></td>
         </tr>
         <tr>
-          <td>工程协议层<span class="ct-sub">开发执行引擎</span></td>
-          <td><code>UEP</code>（并行多 Agent 协议）+ <code>AI Dev Workflow</code>（串行全栈脚手架，7 步 + 断点续传）</td>
+          <td>工程协议层<span class="ct-sub">多 Agent 开发执行引擎</span></td>
+          <td><code>UEP</code>（并行多 Agent 协议：5 步 Workflow + STATE.json）+ <code>ai-dev-workflow</code>（串行全栈脚手架：7 步 + 断点续传 + 人工门控）</td>
           <td class="cover-yes">已可视化</td>
         </tr>
         <tr>
           <td>元方法论层<span class="ct-sub">教 AI 怎么做事</span></td>
-          <td><code>meta-feature-dev</code>（人类提问）· <code>meta-agent-collaboration</code>（AI 需求分析）· <code>meta-self-iteration</code>（自我进化）· <code>ai-project-prompt</code>（产品PRD基座，三层文档产出）</td>
+          <td><code>meta-feature-dev</code>（功能开发方法论）· <code>meta-agent-collaboration</code>（需求分析+两级门控）· <code>meta-self-iteration</code>（AI 自我进化）· <code>ai-project-prompt</code>（产品PRD基座，三层文档产出）</td>
           <td class="cover-yes">已可视化</td>
         </tr>
         <tr>
           <td>工程过程层<span class="ct-sub">日常开发任务</span></td>
-          <td><code>planning-with-files-zh</code>（持久化项目管理）· <code>test-microservice-python</code>（全量测试）· <code>api-test-harness</code>（防幻觉接口测试）</td>
-          <td class="cover-yes">已可视化</td>
+          <td><code>planning-with-files-zh</code>（持久化项目管理）· <code>test-microservice-python</code>（全量测试）· <code>api-test-harness</code>（防幻觉接口测试）· 另有 10 个文档生成与测试类 Skill 待可视化</td>
+          <td class="cover-yes">已可视化 3/13<br><span class="ct-sub">其余待生成</span></td>
         </tr>
         <tr>
-          <td>排障修复层<span class="ct-sub">定位与解决问题</span></td>
-          <td><code>debug-problem</code>（通用入口）· <code>debug-frontend-param</code> · <code>debug-frontend-404</code> · <code>debug-backend-500</code> · <code>doc-troubleshooting</code>（复盘归档）</td>
-          <td class="cover-yes">已可视化</td>
+          <td>排障修复层<span class="ct-sub">定位→修复→复盘→沉淀</span></td>
+          <td><code>debug-problem</code>（通用入口）· <code>debug-frontend-param</code> · <code>debug-frontend-404</code> · <code>debug-backend-500</code> · <code>doc-troubleshooting</code>（复盘归档）· <code>knowledge-base-builder</code>（经验知识库蒸馏）</td>
+          <td class="cover-yes">已可视化 5/6<br><span class="ct-sub">knowledge-base-builder 待生成</span></td>
+        </tr>
+        <tr>
+          <td>安全扫描层<span class="ct-sub">敏感信息检测</span></td>
+          <td><code>local-path-scanner</code>（本地路径泄露扫描+自动清理）· <code>secret-leak-check</code>（密钥泄露检测+风险分级）</td>
+          <td><span class="ct-sub">可视化待生成</span></td>
         </tr>
         <tr>
           <td>基础设施层<span class="ct-sub">容器 / 部署 / 上下文</span></td>
-          <td><code>docker-container-design</code>（6 原则容器化）· <code>rag-context-engine</code>（RAG 上下文工程）· <code>graphify</code>（代码图谱）</td>
-          <td class="cover-yes">已可视化 2/3<br><span class="ct-sub"><code>graphify</code> 见映射文档</span></td>
+          <td><code>docker-container-design</code>（6 原则容器化）· <code>rag-context-engine</code>（RAG 上下文工程：四策略+三层记忆）· <code>graphify</code>（代码库知识图谱：AST 解析 + 社区检测）· <code>codegraph</code>（代码智能 MCP：SQLite 图谱 + 44 工具）</td>
+          <td class="cover-yes">已可视化 2/4<br><span class="ct-sub">graphify / codegraph 待生成</span></td>
         </tr>
         <tr>
           <td>行业解决方案层<span class="ct-sub">产品级架构交付</span></td>
-          <td><code>ai-digital-employee</code>（覆盖金融 / 央企 / 政企 / 法律四垂直领域）· <code>project-cv-generator</code>（项目价值提取工程）</td>
+          <td><code>ai-digital-employee</code>（AI 数字员工平台，覆盖金融 / 央企 / 政企 / 法律四垂直领域）· <code>project-cv-generator</code>（项目价值提取工程+面试特训包）</td>
           <td class="cover-yes">已可视化</td>
         </tr>
       </tbody>
     </table>
 
-    <p class="cover-note reveal"><span class="cover-strong">闭环完整</span>：七大层次均有活跃 Skill，已形成<strong>需求 → 设计 → 开发 → 测试 → 排障 → 部署 → 沉淀</strong>的完整工程闭环；其中 21 个已在本目录生成可视化单页，无需通读源码即可掌握其执行脉络。</p>
+    <p class="cover-note reveal"><span class="cover-strong">闭环完整</span>：八大层次已形成<strong>需求 → 设计 → 开发 → 测试 → 排障 → 复盘 → 沉淀知识库 → 安全审计</strong>的完整工程闭环；其中 20 个已在本目录生成可视化单页，无需通读源码即可掌握其执行脉络。剩余 17 个核心 Skill 的可视化 HTML 可通过 <code>skill-flow-viz-generator</code> 逐步生成。</p>
 
-    <p class="cover-note reveal"><span class="cover-strong">价值所在</span>：每个 Skill 都是一个由 <code>SKILL.md</code> + 脚本 + 策略 + 约束组成的完整「项目体」，而非单一文件；它们共享统一的治理标准（Governance≥85+、Token≤1000）与视觉语言，既可独立使用、也能协同编排，共同构成一套<strong>可复用、可审计、可演进</strong>的 AI 工程能力底座。</p>
+    <p class="cover-note reveal"><span class="cover-strong">价值所在</span>：每个 Skill 都是一个由 <code>SKILL.md</code> + 脚本 + 策略 + 约束组成的完整「项目体」，而非单一文件；它们共享统一的治理标准与视觉语言，既可独立使用、也能协同编排，共同构成一套<strong>可复用、可审计、可演进</strong>的 AI 工程能力底座。</p>
   </div>
 </section>
 
