@@ -536,13 +536,13 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
   <div class="container">
     <div class="hero-badge reveal">SKILLFLOW VIZ · 核心 SKILL 工程集群</div>
     <h1 class="hero-title reveal reveal-delay-1">核心 Skill 工程<br>执行流程总览</h1>
-    <p class="hero-sub reveal reveal-delay-2">欢迎浏览 👋 这里汇集了 26 个核心 Skill 工程的执行流程可视化，逐一以 HTML 呈现「它怎么执行」，并按 9 大层次分组，方便您快速定位与理解。</p>
+    <p class="hero-sub reveal reveal-delay-2">欢迎浏览 👋 这里汇集了 30 个核心 Skill 工程的执行流程可视化，逐一以 HTML 呈现「它怎么执行」，并按 9 大层次分组，方便您快速定位与理解。</p>
     <div class="hero-note reveal reveal-delay-3">
       温馨说明：每张 HTML 都是便于快速入门的「导览解说版」；每个 Skill 背后其实都是由 <code>SKILL.md</code> + 脚本 + 策略 + 约束等多要素组成的完整项目体。样式由 <code>ui-ux-pro-max</code> 统一设计系统驱动。
     </div>
     <div class="hero-stats reveal reveal-delay-3">
       <div class="hero-stat">
-          <div class="hero-stat-num">26</div>
+          <div class="hero-stat-num">30</div>
           <div class="hero-stat-label">核心 Skill 可视化</div>
       </div>
       <div class="hero-stat">
@@ -725,7 +725,17 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
     <div class="section-title reveal">07 · SECURITY SCANNING</div>
     <div class="layer-heading reveal reveal-delay-1">安全扫描层</div>
     <div class="layer-sub reveal reveal-delay-1">敏感信息检测与泄露防护</div>
-    <p class="section-sub reveal reveal-delay-2" style="margin-top:12px;">本层含 <code>local-path-scanner</code>（本地路径泄露扫描）、<code>secret-leak-check</code>（密钥泄露检测）2 个核心 Skill，可视化 HTML 待生成。</p>
+    <p class="section-sub reveal reveal-delay-2" style="margin-top:12px;">结构化提取源码事实，杜绝 LLM 凭记忆回答产生幻觉。</p>
+    <div class="card-grid card-grid-2">
+      <div class="skill-card reveal" style="--lc: #6366F1; opacity: 0.6;">
+        <div class="sc-name">local-path-scanner <span style="font-size:11px;color:var(--accent);margin-left:8px;">可视化待生成</span></div>
+        <div class="sc-desc">本地路径泄露扫描：检测 Windows/macOS/Linux 绝对路径 + file:line 溯源 + --fix 自动清理 + CI 门禁</div>
+      </div>
+      <div class="skill-card reveal reveal-delay-1" style="--lc: #6366F1; opacity: 0.6;">
+        <div class="sc-name">secret-leak-check <span style="font-size:11px;color:var(--accent);margin-left:8px;">可视化待生成</span></div>
+        <div class="sc-desc">密钥泄露检测：2 机械臂（正则+熵检测 / git 历史追踪）+ 4 大维度 + CRITICAL/HIGH/MEDIUM/LOW 风险分级</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -861,7 +871,7 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
         <tr>
           <td>安全扫描层<span class="ct-sub">敏感信息检测</span></td>
           <td><code>local-path-scanner</code>（本地路径泄露扫描+自动清理）· <code>secret-leak-check</code>（密钥泄露检测+风险分级）</td>
-          <td><span class="ct-sub">可视化待生成</span></td>
+          <td class="cover-yes">已可视化 0/2<br><span class="ct-sub">待生成 HTML 可视化</span></td>
         </tr>
         <tr>
           <td>基础设施层<span class="ct-sub">容器 / 部署 / 上下文</span></td>
@@ -876,7 +886,7 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
       </tbody>
     </table>
 
-    <p class="cover-note reveal"><span class="cover-strong">闭环完整</span>：九大层次已形成<strong>需求 → 设计 → 开发 → 测试 → 排障 → 复盘 → 沉淀知识库 → 安全审计</strong>的完整工程闭环；其中 26 个已在本目录生成可视化卡片，无需通读源码即可掌握其执行脉络。剩余 15 个核心 Skill 的可视化 HTML 可通过 <code>skill-flow-viz-generator</code> 逐步生成。</p>
+    <p class="cover-note reveal"><span class="cover-strong">闭环完整</span>：九大层次已形成<strong>需求 → 设计 → 开发 → 测试 → 排障 → 复盘 → 沉淀知识库 → 安全审计</strong>的完整工程闭环；其中 30 个已在本目录生成可视化卡片，无需通读源码即可掌握其执行脉络。剩余 11 个核心 Skill 的可视化 HTML 可通过 <code>skill-flow-viz-generator</code> 逐步生成。</p>
 
     <p class="cover-note reveal"><span class="cover-strong">价值所在</span>：每个 Skill 都是一个由 <code>SKILL.md</code> + 脚本 + 策略 + 约束组成的完整「项目体」，而非单一文件；它们共享统一的治理标准与视觉语言，既可独立使用、也能协同编排，共同构成一套<strong>可复用、可审计、可演进</strong>的 AI 工程能力底座。</p>
   </div>
