@@ -303,6 +303,10 @@ code {
 }
 .path { color: var(--color-accent); }
 
+/* ---------- flow-toolbar ---------- */
+.flow-toolbar [data-zoom="in"],
+.flow-toolbar [data-zoom="out"] { display: none; }
+
 /* ---------- prose ---------- */
 .prose p { font-size: 15px; }
 .prose strong { color: var(--color-foreground); }
