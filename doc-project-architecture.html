@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>doc-project-architecture · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-process"><span class="layer-dot"></span>工程过程层</div>
+    <h1 class="doc-title">Project Architecture Doc（项目架构与模块结构）</h1>
+    <p class="doc-sub">多语言项目架构分析工具：6 个 Python 机械臂先行提取确定性数据（技术栈/模块清单/目录树/依赖关系/分层模式/外部集成），AI 只补描述列。支持 Java/PHP/Python/Go/Vue/React 全栈，大项目零幻觉。</p>
+  </header>
+
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">6 个机械臂依次扫描，AI 最后组装。<span style="color:var(--layer-process);">◆ 菱形</span>为防幻觉闸口（JSON 中没有的不得添加）。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>执行全流程（7 步·6 机械臂 + AI 组装）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">00</span> 技术栈自动检测</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>python3 scripts/project_scanner.py /path/to/project</code></dd>
+            <dt>产出</dt><dd>JSON：language / framework / build_tool / is_monorepo / is_fullstack。</dd>
+            <dt>动作</dt><dd>AI 从不用猜技术栈。检测完一句话告知：「检测到 Java Spring Boot 项目，Maven 构建，共 3 个子模块 + 1 个 Vue 前端。开始扫描。」</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> 模块/服务清单提取</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>python3 scripts/module_finder.py /path/to/project</code></dd>
+            <dt>动作</dt><dd>自动解析构建文件（pom.xml/go.mod/package.json/composer.json/pyproject.toml），输出每个模块的名称、类型（业务/基础/前端）、构建工具、端口。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 智能目录树</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>python3 scripts/dir_tree.py /path/to/project --depth 3</code></dd>
+            <dt>动作</dt><dd>按技术栈自动过滤无关目录（node_modules/vendor/venv/.git/target/dist），最多 3 层，输出 Markdown 树 + 目录约定说明。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 依赖关系分析</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>python3 scripts/dep_analyzer.py /path/to/project</code></dd>
+            <dt>动作</dt><dd>解析模块间构建依赖 + 跨服务调用（扫描 HTTP Client/RestTemplate/Feign/axios/gRPC）。输出 Mermaid 依赖图数据 + 循环依赖警告。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 分层架构与设计模式检测</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>python3 scripts/layer_detector.py /path/to/project</code></dd>
+            <dt>动作</dt><dd>按技术栈规则识别分层层级（MVC/DDD/三层）+ 常见设计模式（Factory/Strategy/Observer/Builder/DI）。输出文件名:行号作为证据。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 外部集成扫描</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>python3 scripts/integration_finder.py /path/to/project</code></dd>
+            <dt>动作</dt><dd>扫描配置文件和客户端代码，汇总 DB（MySQL/PostgreSQL/MongoDB）、Cache（Redis）、MQ（RabbitMQ/Kafka）、存储（OSS/S3）、第三方 API 使用分布。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">06</span> AI 组装文档</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>拿到 6 个 JSON 后，AI 按 <code>references/output-template.md</code> 填描述列、组装 Mermaid 图、输出最终文档。</dd>
+            <dt>Gate</dt><dd>◆ 不可编造：JSON 中没有的模块/依赖/模式，不得凭空添加。</dd>
+            <dt>产出</dt><dd><code>.ai-workflow/doc-project-architecture/项目架构与模块结构.md</code>（6 章）。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>接手遗留项目，需要快速理解整体架构</li>
+          <li>技术分享、新人 onboarding 准备架构文档</li>
+          <li>重构前做项目现状快照</li>
+          <li>任意规模项目（单模块 / 多模块 / monorepo）</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>接口文档生成 → doc-api-overview</li>
+          <li>架构设计图（Mermaid 12 图） → doc-architecture-diagram</li>
+          <li>业务模型与风险分析 → doc-business-risk</li>
+          <li>项目启动文档（环境/命令） → doc-project-startup</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>项目架构与模块结构.md</code>（6 章）</li>
+          <li>Mermaid 依赖图</li>
+          <li>设计模式代码证据（文件:行号）</li>
+          <li>中间件分布表</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>支持技术栈矩阵</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>后端</h3>
+        <ul>
+          <li>Java · Spring Boot（Maven/Gradle）</li>
+          <li>PHP · Laravel / ThinkPHP（Composer）</li>
+          <li>Python · Flask / FastAPI / Django（pip/Poetry）</li>
+          <li>Go · Gin / Echo / net/http（Go modules）</li>
+          <li>Node.js · Express / NestJS（npm/yarn/pnpm）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>前端</h3>
+        <ul>
+          <li>Vue / React / Nuxt</li>
+          <li>输出路由结构 + 组件树 + 状态管理</li>
+          <li>前后端平等对待</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">6</div><div class="m-label">机械臂脚本</div></div>
+      <div class="metric"><div class="m-val">0</div><div class="m-label">凭空编造</div></div>
+      <div class="metric"><div class="m-val">10+</div><div class="m-label">技术栈支持</div></div>
+      <div class="metric"><div class="m-val">7</div><div class="m-label">流程步数</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="doc-api-overview.html">doc-api-overview（接口全貌）</a>
+      <a href="doc-project-startup.html">doc-project-startup（环境搭建+启动命令）</a>
+      <a href="doc-business-risk.html">doc-business-risk（业务模型+技术债务）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '0. 技术栈检测', sub: '产出：技术栈 JSON' },
+    { label: '1. 模块清单', sub: '产出：模块列表' },
+    { label: '2. 目录树', sub: '产出：MD 树' },
+    { label: '3. 依赖分析', sub: '产出：依赖图数据' },
+    { label: '4. 分层+模式检测', sub: '产出：分层+模式证据' },
+    { label: '5. 外部集成扫描', sub: '产出：中间件分布' },
+    { label: '6. AI 组装文档', sub: '产出：6 章架构文档', gate: true }
+  ];
+
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>skill-selector · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-meta-eng"><span class="layer-dot"></span>元工程层</div>
+    <h1 class="doc-title">Skill Selector（Skill 选择顾问）</h1>
+    <p class="doc-sub">工具/入口型顾问：用户发一句粗糙需求 → 反问 ≤2 个澄清问题 → 对照 SKILLS-INDEX 总路由表定类别 → 进 index/ 分类文件取详细路由 → 产出带绝对路径、可直接复制执行的提示词（含多 skill 组合、多 agent 编排）。</p>
+  </header>
+
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">从一句模糊需求到可复制提示词，四步完成。<span style="color:var(--layer-meta-eng);">◆ 菱形</span>为人工确认闸口（Gate）。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>执行全流程（4 步）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 理解需求</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>收用户一句粗需求（例：「我想把聊天里的方法论变成 skill」）。用户只发观点时，AI 代为补全澄清问题与路由。</dd>
+            <dt>输出</dt><dd>需求意图一句话归纳。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 澄清（≤2 问）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>最多 2 问，不堆砌：① 输入材料形态？代码 / 会话 / 文档 / 无；② 产出物形态？skill 工程 / 文档报告 / 提示词 / 测试脚本 / HTML 可视化。用户能明确回答则少问。</dd>
+            <dt>Gate</dt><dd>◆ 用户确认澄清答案后进入路由。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 路由（读索引不复制）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>读 <code>SKILLS-INDEX.md</code> 总路由表（第三节）定类别 → 进对应 <code>index/xx.md</code> 取分类详细路由 + <code>docs/SKILL工程组合技巧/</code> 案例 → 定主/辅助 skill、是否多 skill 组合、是否多 agent 编排。</dd>
+            <dt>约束</dt><dd>路由事实必须来自索引文件，不凭空编 skill。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 产出可复制提示词</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>生成可复制提示词：skill 绝对路径 + 机械臂脚本绝对路径（若有）+ 输出目录 + 占位符 + 多 agent 编排（如适用）。参考 <code>references/prompt-template.md</code>。</dd>
+            <dt>产出</dt><dd>推荐主/辅助 skill 清单 + 路由理由（一行）+ 可直接复制执行的提示词。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>用户说「不知道用哪个 skill / 帮我选 skill / 该用哪个工程为我服务」</li>
+          <li>用户给一句粗需求，想要可复制的提示词发给另一个 agent</li>
+          <li>需要多 skill 组合推荐 / 多 agent 编排提示词</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>纯代码编写、修 bug、部署 → 转入对应 skill</li>
+          <li>已明确指定某个 skill 的直接调用 → 不拦截</li>
+          <li>具体执行任务 → 本 skill 只产出提示词，不代做</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li>推荐主/辅助 skill 清单 + 路由理由</li>
+          <li>可复制提示词（绝对路径 + 输出目录 + 占位符）</li>
+          <li>多 agent 编排提示词（如适用）</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键原则</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>读索引不复制</h3>
+        <p>路由依据 SKILLS-INDEX.md 总路由 + index/ 分类文件，不内嵌 skill 目录，避免漂移。</p>
+      </div>
+      <div class="card">
+        <h3>少问多产</h3>
+        <p>澄清 ≤ 2 问，用户给观点就代为完善，不追问堆砌。</p>
+      </div>
+      <div class="card">
+        <h3>可复制优先</h3>
+        <p>输出是可直接执行的提示词，不是分析报告。替换占位符即执行。</p>
+      </div>
+      <div class="card">
+        <h3>工具/入口型</h3>
+        <p>先判定场景再路由，不越界执行任务。对标 debug-problem。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">≤2</div><div class="m-label">澄清提问</div></div>
+      <div class="metric"><div class="m-val">100%</div><div class="m-label">路径可复制</div></div>
+      <div class="metric"><div class="m-val">0</div><div class="m-label">凭空编 skill</div></div>
+      <div class="metric"><div class="m-val">4</div><div class="m-label">流程步数</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="debug-problem.html">debug-problem（同型参考：工具/入口型动态分类）</a>
+      <a href="project-skill-builder.html">project-skill-builder（工程惯例依据）</a>
+      <a href="feature-distiller.html">feature-distiller（框架契约抽取）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 理解需求', sub: '产出：意图归纳' },
+    { label: '2. 澄清 ≤2 问', sub: '产出：输入/产出形态', gate: true },
+    { label: '3. 路由（读索引）', sub: '产出：skill 组合方案' },
+    { label: '4. 产出可复制提示词', sub: '产出：带绝对路径 prompt' }
+  ];
+
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

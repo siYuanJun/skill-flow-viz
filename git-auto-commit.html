@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>git-auto-commit · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-process"><span class="layer-dot"></span>工程过程层</div>
+    <h1 class="doc-title">Git Auto Commit（Git 自动提交助手）</h1>
+    <p class="doc-sub">一键完成 Git 提交流程：分析变更 → 生成规范注释 → 暂存 → 提交，提交后经用户人工确认再推送。Conventional Commits 中文前缀，一次确认不重复打扰。push 属对外操作，绝不自动执行。</p>
+  </header>
+
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">一次确认 → 感知状态 → 生成 message → 提交 + push 人工确认。<span style="color:var(--layer-process);">◆ 菱形</span>为人工确认闸口。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>执行全流程（4 步）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">00</span> 一次确认（目录 + 提交范围合并）</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>用 <code>pwd</code> 显示当前目录，展示变更概览（文件数 + git diff --stat 行数）。一次询问（推荐项放第一个）：</dd>
+            <dt>选项</dt><dd>✅ 推荐：确认在此目录提交（提交全部）；备选：只提交部分变更；备选：换目录。</dd>
+            <dt>规则</dt><dd>用户选推荐项 → 直接进入步骤 1，提交前不再问第二次；push 仍需单独确认。防止误提交且不重复打扰。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">01</span> 感知状态</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>git status --porcelain</code> · <code>git diff --stat</code> · <code>git diff --cached --stat</code> · <code>git branch --show-current</code> · <code>git remote -v</code></dd>
+            <dt>决策</dt><dd>无变更 → 告知用户结束；只有未跟踪文件 → 询问是否加入；有未暂存变更 → 进入步骤 2。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 分析变更 + 生成 Commit Message</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>读取 <code>git diff</code> 和 <code>git diff --cached</code>，按变更类型匹配 Conventional Commits 前缀。</dd>
+            <dt>前缀表</dt><dd>feat: 新功能 · fix: 修复Bug · docs: 文档 · refactor: 重构 · style: 样式/UI · test: 测试 · build: 构建/依赖 · perf: 性能优化 · chore: 杂项</dd>
+            <dt>规则</dt><dd>格式 <code>&lt;type&gt;: &lt;中文简述&gt;</code>（一行 ≤50 字）；多个不相关变更 → 拆成多次提交；末尾自动追加 Co-Authored-By。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 提交 + Push 人工确认</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>提交</dt><dd><code>git add -A</code> → <code>git commit -m "&lt;message&gt;"</code></dd>
+            <dt>Push 规则</dt><dd>提交成功后<strong>不自动 push</strong>。显示推送摘要（分支名 + commit hash + message + 远程目标），明确询问用户是否 push。仅在用户明确确认后执行 <code>git push</code>。用户说「只提交不推送」→ 不 push，直接结束。</dd>
+            <dt>Gate</dt><dd>◆ push 属对外操作，无论分支是否已关联远程、是否首次推送，一律先经用户确认。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Commit Message 前缀速查</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>常用前缀</h3>
+        <ul>
+          <li><code>feat:</code> 新功能 — 例：添加用户登录模块</li>
+          <li><code>fix:</code> 修复Bug — 例：修复分页总数计算错误</li>
+          <li><code>docs:</code> 文档 — 例：更新API接口文档</li>
+          <li><code>refactor:</code> 重构 — 例：提取公共校验逻辑</li>
+          <li><code>style:</code> 样式/UI — 例：调整按钮间距</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>其他前缀</h3>
+        <ul>
+          <li><code>test:</code> 测试 — 例：补充订单模块单元测试</li>
+          <li><code>build:</code> 构建/依赖 — 例：升级Spring Boot到3.2</li>
+          <li><code>perf:</code> 性能优化 — 例：优化列表查询索引</li>
+          <li><code>chore:</code> 杂项 — 例：更新.gitignore</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>代码改完了，想提交到当前分支</li>
+          <li>需要自动生成符合规范的 commit message</li>
+          <li>想提交但希望 push 前先人工确认</li>
+          <li>触发词：提交代码 / commit / push / 帮我提交</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>分支合并/冲突解决 → 手动操作</li>
+          <li>交互式 rebase → 需要手动确认</li>
+          <li>修改历史提交 → git commit --amend 单独处理</li>
+          <li>Force push → 危险操作，需手动执行</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li>终端直接执行 git 命令，实时显示结果</li>
+          <li>提交成功：分支名 + commit hash + commit message</li>
+          <li>Push 成功：远程分支名</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键原则</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>一次确认再动</h3>
+        <p>提交前只问一次：目录 + 范围合并确认，防止误提交且不重复打扰。</p>
+      </div>
+      <div class="card">
+        <h3>一次一件事</h3>
+        <p>不相关变更拆成多次提交，每个 commit 做一件事。</p>
+      </div>
+      <div class="card">
+        <h3>注释即文档</h3>
+        <p>Commit message 让别人和三个月后的自己一眼看懂改了什么。</p>
+      </div>
+      <div class="card">
+        <h3>Push 需人工确认</h3>
+        <p>提交后不自动 push，先展示摘要并询问，确认后才推送。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">1</div><div class="m-label">提交前确认</div></div>
+      <div class="metric"><div class="m-val">9</div><div class="m-label">前缀类型</div></div>
+      <div class="metric"><div class="m-val">≤50</div><div class="m-label">message 字数</div></div>
+      <div class="metric"><div class="m-val">4</div><div class="m-label">流程步数</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="ai-dev-workflow.html">ai-dev-workflow（开发流程中自动调用本 Skill 做提交）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '0. 一次确认', sub: '目录+范围合并确认', gate: true },
+    { label: '1. 感知状态', sub: '产出：变更概览' },
+    { label: '2. 分析变更+生成message', sub: '产出：commit message' },
+    { label: '3. 提交+Push确认', sub: '产出：commit hash', gate: true }
+  ];
+
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>

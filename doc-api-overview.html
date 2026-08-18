@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>doc-api-overview · Skill 执行流程可视化</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/flow.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="doc-head">
+    <a class="back-link" href="index.html">← 返回总览</a>
+    <div class="layer-tag l-process"><span class="layer-dot"></span>工程过程层</div>
+    <h1 class="doc-title">API Overview Doc Generator（接口全貌文档）</h1>
+    <p class="doc-sub">基于代码生成《接口全貌文档》，覆盖 HTTP 端点、服务间调用、消息队列。脚本先行（parse_api.py --scaffold）机械提取方法/路径/参数/返回类型，AI 只补接口说明列。支持 PHP/Java/Go/Python/Node.js 任意后端栈。</p>
+  </header>
+
+  <section class="section">
+    <h2>执行流程图（一眼看懂全流程）</h2>
+    <p class="doc-sub" style="margin-bottom:18px;">脚本先行，AI 只补描述列。<span style="color:var(--layer-process);">◆ 菱形</span>为验证闸口（退出码 0 才能交付）。</p>
+    <div class="flow-board" id="mfd-board">
+      <div class="flow-toolbar">
+        <button data-zoom="in" title="放大">＋</button>
+        <button data-zoom="out" title="缩小">－</button>
+        <button data-zoom="fit" title="适配全图">⤢</button>
+        <button data-zoom="reset" title="重置">⟲</button>
+        <span class="flow-zoom" id="mfd-zoom">100%</span>
+      </div>
+      <div class="flow-canvas" id="mfd-canvas"></div>
+      <div class="flow-hint">滚轮缩放 · 拖拽平移 · 双击放大</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>执行全流程（5 步）</h2>
+    <div class="timeline">
+      <details class="step" open>
+        <summary><span class="step-num">01</span> 确认脚本就绪</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>先扫描项目代码：读取 Controller/Router 目录，确认技术栈（Spring Boot/Flask/Gin/Laravel/Express）、路由定义方式、路径前缀是否常量注入。再定制编写 <code>scripts/&lt;服务名&gt;/parse_api.py</code>。</dd>
+            <dt>产出</dt><dd><code>parse_api.py</code> 已存在（支持 --scaffold / 默认验证 / --scan-only 三模式）。</dd>
+            <dt>红线</dt><dd>不存在则生成后再进下一步，绝不允许无脚本直接靠 AI 提取。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">02</span> 生成骨架</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>python scripts/&lt;服务名&gt;/parse_api.py --scaffold &gt; /tmp/scaffold.md</code></dd>
+            <dt>产出</dt><dd>骨架表已自动填入 HTTP 方法、完整 URL、参数、返回值类型、源码注释、模块分组。这 5 列为确定性数据，<strong>不得修改</strong>。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">03</span> 填入接口说明</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>动作</dt><dd>有注释 → 保留注释内容；无注释 → 按方法名推导中文描述（list→获取分页列表、save→新增、update→更新、delete→删除、get→详情、export→导出）。</dd>
+            <dt>产出</dt><dd>骨架表第 5 列（接口说明）全部填完。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">04</span> 追加服务调用与消息队列</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>服务间调用</dt><dd>扫 @FeignClient / RestTemplate / http.Client / gRPC → 调用方→被调用方、方法签名、地址/路径、降级/重试。</dd>
+            <dt>消息队列</dt><dd>扫 @JmsListener / @RabbitListener / Kafka Consumer / Redis Pub-Sub → Topic/Queue、消息用途、消息体结构。</dd>
+            <dt>产出</dt><dd>三章节完整文档（HTTP 接口 + 服务间调用 + 消息队列）。</dd>
+          </dl>
+        </div>
+      </details>
+      <details class="step">
+        <summary><span class="step-num">05</span> 交叉验证</summary>
+        <div class="step-body">
+          <dl class="kv">
+            <dt>命令</dt><dd><code>python scripts/&lt;服务名&gt;/parse_api.py</code>（默认验证模式）</dd>
+            <dt>Gate</dt><dd>◆ 退出码 0 = 源码与文档一致（✅ 完成）；1 = 存在差异 → 修正差异后重跑直到 0。</dd>
+            <dt>完成标准</dt><dd>退出码 0 + 三章节已生成 + 每章端点数量与源码一致。</dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关键信息</h2>
+    <div class="cards">
+      <div class="card trigger">
+        <h3>触发条件</h3>
+        <ul>
+          <li>微服务上线前需要标准化接口清单</li>
+          <li>接口文档缺失或过期</li>
+          <li>集成测试、外部对接前</li>
+          <li>任意后端栈：PHP / Java / Go / Python / Node.js</li>
+        </ul>
+      </div>
+      <div class="card boundary">
+        <h3>排除边界</h3>
+        <ul>
+          <li>业务模型/数据模型分析 → doc-business-risk</li>
+          <li>项目架构分析 → doc-project-architecture</li>
+          <li>架构设计图/流程图 → doc-architecture-diagram</li>
+          <li>项目启动文档 → doc-project-startup</li>
+          <li>编写接口代码/修复 Bug → AI Dev Workflow</li>
+        </ul>
+      </div>
+      <div class="card output">
+        <h3>产出物</h3>
+        <ul>
+          <li><code>&lt;服务目录&gt;/docs/接口全貌.md</code></li>
+          <li>三章节：HTTP 接口总览 + 服务间调用 + 消息队列通信</li>
+          <li>配套 <code>parse_api.py</code> 验证脚本</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>禁止行为清单</h2>
+    <div class="cards">
+      <div class="card" style="border-color:var(--danger);">
+        <h3>❌ 绝对禁止</h3>
+        <ul>
+          <li>不先跑 --scaffold 就手工生成</li>
+          <li>随意翻译方法名动作词（del 不改 delete）</li>
+          <li>跳过骨架中的确定性列</li>
+          <li>对相似端点不补中文描述</li>
+          <li>生成后不跑验证</li>
+          <li>验证不通过就提交</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>治理指标</h2>
+    <div class="metrics">
+      <div class="metric"><div class="m-val">5</div><div class="m-label">确定性列</div></div>
+      <div class="metric"><div class="m-val">3</div><div class="m-label">脚本模式</div></div>
+      <div class="metric"><div class="m-val">0</div><div class="m-label">退出码(交付)</div></div>
+      <div class="metric"><div class="m-val">5</div><div class="m-label">流程步数</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>关联 Skill</h2>
+    <div class="related">
+      <a href="test-microservice-python.html">test-microservice-python（Python 测试脚本）</a>
+      <a href="doc-project-architecture.html">doc-project-architecture（架构概览）</a>
+      <a href="api-test-harness.html">api-test-harness（接口调用测试）</a>
+    </div>
+  </section>
+</div>
+<script src="assets/panzoom.min.js"></script>
+<script>
+(function () {
+  var nodes = [
+    { label: '1. 确认脚本就绪', sub: '产出：parse_api.py' },
+    { label: '2. 生成骨架', sub: '产出：/tmp/scaffold.md' },
+    { label: '3. 填入接口说明', sub: '产出：描述列填完' },
+    { label: '4. 追加服务调用+MQ', sub: '产出：三章节文档' },
+    { label: '5. 交叉验证', sub: '退出码 0 = 完成', gate: true }
+  ];
+
+  var html = '<div class="fh-flow">';
+  nodes.forEach(function(n, i) {
+    if (i > 0) html += '<div class="fh-arrow"></div>';
+    var cls = n.gate ? 'fh-node fh-gate' : 'fh-node';
+    html += '<div class="' + cls + '">';
+    html += '<span>' + n.label + '</span>';
+    if (n.sub) html += '<small>' + n.sub + '</small>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  var board = document.getElementById('mfd-board');
+  var canvas = document.getElementById('mfd-canvas');
+  var zoomLabel = document.getElementById('mfd-zoom');
+
+  canvas.innerHTML = html;
+  var pz = panzoom(canvas, { maxZoom: 5, minZoom: 0.2, zoomSpeed: 0.06 });
+
+  function update() { zoomLabel.textContent = Math.round(pz.getTransform().scale * 100) + '%'; }
+  pz.on('zoom', update);
+  update();
+
+  function fit() {
+    var cw = canvas.scrollWidth, ch = canvas.scrollHeight;
+    if (!cw || !ch) return;
+    var bw = board.clientWidth, bh = board.clientHeight;
+    var scale = Math.min(bw / cw, bh / ch, 3);
+    pz.moveTo(0, 0);
+    pz.zoomAbs(bw / 2, bh / 2, scale);
+    pz.moveTo((bw - cw * scale) / 2, (bh - ch * scale) / 2);
+    update();
+  }
+
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var act = b.getAttribute('data-zoom');
+      if (act === 'in') pz.zoomIn();
+      else if (act === 'out') pz.zoomOut();
+      else if (act === 'reset') pz.reset();
+      else if (act === 'fit') fit();
+    });
+  });
+  fit();
+})();
+</script>
+</body>
+</html>
