@@ -146,14 +146,21 @@ body {
 }
 .top-nav-item.active { color: var(--accent); font-weight: 600; text-shadow: 0 0 18px var(--accent-glow); }
 .top-nav-item::after {
-  background: linear-gradient(90deg, transparent, var(--primary), transparent);
-  background-size: 200% 100%;
-  background-position: 120% 0;
-  transition: background-position 0.45s ease, box-shadow 0.45s ease;
+  content: '';
+  position: absolute;
+  bottom: 0; left: 14px; right: 14px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 2px;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
 }
-.top-nav-item:hover::after { background-position: 0 0; }
+.top-nav-item:hover::after { opacity: 1; transform: scaleX(1); }
 .top-nav-item.active::after {
-  background-position: 0 0;
+  opacity: 1;
+  transform: scaleX(1);
   box-shadow: 0 0 12px var(--primary-glow);
 }
 .top-nav-divider {
