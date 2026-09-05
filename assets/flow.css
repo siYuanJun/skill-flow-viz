@@ -4,9 +4,9 @@
    ============================================================ */
 
 /* 网格点颜色变量：浅色 / 深色自动适配 */
-:root { --flow-grid-dot: rgba(100, 116, 139, .18); }
+:root { --flow-grid-dot: rgba(45, 212, 191, .14); }
 @media (prefers-color-scheme: dark) {
-  :root { --flow-grid-dot: rgba(148, 163, 184, .20); }
+  :root { --flow-grid-dot: rgba(45, 212, 191, .16); }
 }
 
 .flow-board {

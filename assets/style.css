@@ -6,66 +6,66 @@
    ============================================================ */
 
 :root {
-  --color-primary: #475569;
-  --color-on-primary: #FFFFFF;
-  --color-secondary: #64748B;
-  --color-accent: #2563EB;
-  --color-accent-soft: #EFF4FF;
-  --color-background: #F8FAFC;
-  --color-surface: #FFFFFF;
-  --color-foreground: #1E293B;
-  --color-muted: #EAEFF3;
-  --color-muted-fg: #64748B;
-  --color-border: #E2E8F0;
-  --color-destructive: #DC2626;
-  --color-destructive-soft: #FEF2F2;
-  --color-ring: #475569;
-  --color-success: #16A34A;
-  --color-success-soft: #F0FDF4;
+  --color-primary: #5eead4;
+  --color-on-primary: #0a0e14;
+  --color-secondary: #8b98a9;
+  --color-accent: #5eead4;
+  --color-accent-soft: rgba(45, 212, 191, 0.14);
+  --color-background: #0a0e14;
+  --color-surface: #0f151d;
+  --color-foreground: #e6edf3;
+  --color-muted: #141c26;
+  --color-muted-fg: #8b98a9;
+  --color-border: #1e293b;
+  --color-destructive: #f87171;
+  --color-destructive-soft: rgba(248, 113, 113, 0.12);
+  --color-ring: #2dd4bf;
+  --color-success: #34d399;
+  --color-success-soft: rgba(52, 211, 153, 0.12);
 
   /* layer accents (small semantic dots only, not dominant) */
-  --layer-meta-eng: #6366F1;
-  --layer-meta-method: #8B5CF6;
-  --layer-process: #2563EB;
-  --layer-debug: #D97706;
-  --layer-infra: #0D9488;
-  --layer-industry: #059669;
+  --layer-meta-eng: #818cf8;
+  --layer-meta-method: #a78bfa;
+  --layer-process: #38bdf8;
+  --layer-debug: #fbbf24;
+  --layer-infra: #2dd4bf;
+  --layer-industry: #34d399;
 
-  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --radius: 10px;
   --radius-sm: 6px;
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.08);
-  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
   --maxw: 880px;
   --space: 8px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-primary: #94A3B8;
-    --color-on-primary: #0F172A;
-    --color-secondary: #94A3B8;
-    --color-accent: #60A5FA;
-    --color-accent-soft: #1E293B;
-    --color-background: #0B1120;
-    --color-surface: #111827;
-    --color-foreground: #E2E8F0;
-    --color-muted: #1E293B;
-    --color-muted-fg: #94A3B8;
-    --color-border: #1F2937;
-    --color-destructive: #F87171;
-    --color-destructive-soft: #2A1414;
-    --color-ring: #94A3B8;
-    --color-success: #4ADE80;
-    --color-success-soft: #0F2A17;
-    --layer-meta-eng: #A5B4FC;
-    --layer-meta-method: #C4B5FD;
-    --layer-process: #60A5FA;
-    --layer-debug: #FBBF24;
-    --layer-infra: #2DD4BF;
-    --layer-industry: #34D399;
+    --color-primary: #5eead4;
+    --color-on-primary: #0a0e14;
+    --color-secondary: #8b98a9;
+    --color-accent: #5eead4;
+    --color-accent-soft: rgba(45, 212, 191, 0.14);
+    --color-background: #0a0e14;
+    --color-surface: #0f151d;
+    --color-foreground: #e6edf3;
+    --color-muted: #141c26;
+    --color-muted-fg: #8b98a9;
+    --color-border: #1e293b;
+    --color-destructive: #f87171;
+    --color-destructive-soft: rgba(248, 113, 113, 0.12);
+    --color-ring: #2dd4bf;
+    --color-success: #34d399;
+    --color-success-soft: rgba(52, 211, 153, 0.12);
+    --layer-meta-eng: #818cf8;
+    --layer-meta-method: #a78bfa;
+    --layer-process: #38bdf8;
+    --layer-debug: #fbbf24;
+    --layer-infra: #2dd4bf;
+    --layer-industry: #34d399;
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
     --shadow-md: 0 4px 14px rgba(0,0,0,0.5);
   }
