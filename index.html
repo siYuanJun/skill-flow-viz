@@ -552,8 +552,16 @@ h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
   /* 移动端单列：向下箭头统一垂直串联 */
   .viz-node::after { content: '▼'; position: absolute; left: 50%; bottom: -17px; transform: translateX(-50%); color: var(--accent); font-size: 12px; opacity: 0.85; z-index: 2; line-height: 1; }
   .viz-node:not(:nth-last-child(1))::after { display: block; }
+}
 
-  /* Collapsible hamburger nav */
+/* 移动端下拉菜单项交错入场 */
+@keyframes navItemIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Nav breakpoint: 14 tabs need ~1100px, below that switch to hamburger menu */
+@media (max-width: 1100px) {
   .top-nav-inner { justify-content: flex-start; }
   .top-nav-toggle { display: inline-flex; }
   .top-nav-links {
@@ -587,21 +595,10 @@ h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
     border-left: 2px solid transparent;
     transition: border-color 0.25s, background 0.25s, color 0.25s;
   }
+  .top-nav-item::after { display: none; }
   .top-nav-item:hover { background: rgba(45, 212, 191, 0.08); border-left-color: var(--accent); }
   .top-nav-item.active { border-left-color: var(--accent); background: rgba(45, 212, 191, 0.06); }
   .top-nav-divider { display: none; }
-}
-
-/* 移动端下拉菜单项交错入场 */
-@keyframes navItemIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Medium screens: keep horizontal bar but allow safe scroll */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .top-nav-links { justify-content: flex-start; padding: 0 8px; }
-  .top-nav-item { padding: 13px 10px; font-size: 12.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
@@ -1414,7 +1411,7 @@ topNavToggle.addEventListener('click', () => {
 // Close menu after selecting an item (mobile)
 topNavItems.forEach(item => item.addEventListener('click', () => setNavOpen(false)));
 // Close menu when resizing up to desktop
-window.addEventListener('resize', () => { if (window.innerWidth > 768) setNavOpen(false); });
+window.addEventListener('resize', () => { if (window.innerWidth > 1100) setNavOpen(false); });
 
 // Scroll strengthen: nav gains shadow + deeper glass after passing hero
 const navScrollHandler = () => {
