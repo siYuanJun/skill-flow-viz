@@ -60,7 +60,12 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(45, 212, 191, 0.15);
-  transition: all 0.3s;
+  transition: background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+#top-nav.nav-scrolled {
+  background: rgba(10, 14, 20, 0.92);
+  border-bottom-color: var(--border-active);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(45, 212, 191, 0.12) inset;
 }
 .top-nav-inner {
   max-width: 1400px;
@@ -74,19 +79,32 @@ body {
 .top-nav-toggle {
   display: none;
   flex-shrink: 0;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 5px;
   margin-right: 12px;
   width: 38px; height: 38px;
-  font-size: 18px;
   color: var(--fg);
   background: none;
   border: 1px solid var(--border-active);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s;
+  position: relative;
 }
-.top-nav-toggle:hover { background: rgba(45, 212, 191, 0.15); color: var(--secondary); }
+.top-nav-toggle:hover { background: rgba(45, 212, 191, 0.15); border-color: var(--accent); box-shadow: 0 0 14px var(--primary-glow); }
+.top-nav-toggle .bar {
+  display: block;
+  width: 18px; height: 2px;
+  background: var(--fg);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.25s ease, background 0.3s;
+}
+.top-nav-toggle.open { border-color: var(--accent); box-shadow: 0 0 16px var(--primary-glow); }
+.top-nav-toggle.open .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--accent); }
+.top-nav-toggle.open .bar:nth-child(2) { opacity: 0; transform: scaleX(0.2); }
+.top-nav-toggle.open .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--accent); }
 .top-nav-links {
   display: flex;
   align-items: center;
@@ -121,11 +139,22 @@ body {
   transition: all 0.3s;
   border-radius: 2px;
 }
-.top-nav-item:hover { color: var(--secondary); }
-.top-nav-item.active { color: var(--accent); font-weight: 600; }
+.top-nav-item:hover {
+  color: var(--accent);
+  text-shadow: 0 0 14px var(--accent-glow);
+  transform: translateY(-1px);
+}
+.top-nav-item.active { color: var(--accent); font-weight: 600; text-shadow: 0 0 18px var(--accent-glow); }
+.top-nav-item::after {
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  background-size: 200% 100%;
+  background-position: 120% 0;
+  transition: background-position 0.45s ease, box-shadow 0.45s ease;
+}
+.top-nav-item:hover::after { background-position: 0 0; }
 .top-nav-item.active::after {
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  box-shadow: 0 0 10px var(--primary-glow);
+  background-position: 0 0;
+  box-shadow: 0 0 12px var(--primary-glow);
 }
 .top-nav-divider {
   width: 1px; height: 16px;
@@ -534,25 +563,39 @@ h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    background: rgba(15, 15, 35, 0.97);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
+    background: rgba(13, 18, 26, 0.94);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    border-bottom: 1px solid var(--border-active);
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    background-image:
+      linear-gradient(rgba(45, 212, 191, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45, 212, 191, 0.05) 1px, transparent 1px);
+    background-size: 34px 34px;
   }
   .top-nav-links.open { max-height: 80vh; overflow-y: auto; }
+  .top-nav-links.open .top-nav-item { animation: navItemIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .top-nav-item {
     padding: 15px 22px;
     font-size: 14px;
     text-align: left;
     width: 100%;
     white-space: normal;
+    border-left: 2px solid transparent;
+    transition: border-color 0.25s, background 0.25s, color 0.25s;
   }
-  .top-nav-item::after { display: none; }
+  .top-nav-item:hover { background: rgba(45, 212, 191, 0.08); border-left-color: var(--accent); }
+  .top-nav-item.active { border-left-color: var(--accent); background: rgba(45, 212, 191, 0.06); }
   .top-nav-divider { display: none; }
+}
+
+/* 移动端下拉菜单项交错入场 */
+@keyframes navItemIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Medium screens: keep horizontal bar but allow safe scroll */
@@ -573,7 +616,9 @@ h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
 <!-- Top Navigation Bar -->
 <nav id="top-nav">
   <div class="top-nav-inner">
-    <button class="top-nav-toggle" id="top-nav-toggle" aria-label="切换导航菜单" aria-expanded="false">☰</button>
+    <button class="top-nav-toggle" id="top-nav-toggle" aria-label="切换导航菜单" aria-expanded="false">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
     <div class="top-nav-links" id="top-nav-links">
       <button class="top-nav-item active" data-target="hero">开篇</button>
       <span class="top-nav-divider"></span>
@@ -1355,7 +1400,13 @@ const topNavToggle = document.getElementById('top-nav-toggle');
 const topNavLinks = document.getElementById('top-nav-links');
 function setNavOpen(open) {
   topNavLinks.classList.toggle('open', open);
+  topNavToggle.classList.toggle('open', open);
   topNavToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if (open) {
+    topNavItems.forEach((item, i) => {
+      item.style.animationDelay = (i * 0.04).toFixed(2) + 's';
+    });
+  }
 }
 topNavToggle.addEventListener('click', () => {
   setNavOpen(!topNavLinks.classList.contains('open'));
@@ -1364,6 +1415,13 @@ topNavToggle.addEventListener('click', () => {
 topNavItems.forEach(item => item.addEventListener('click', () => setNavOpen(false)));
 // Close menu when resizing up to desktop
 window.addEventListener('resize', () => { if (window.innerWidth > 768) setNavOpen(false); });
+
+// Scroll strengthen: nav gains shadow + deeper glass after passing hero
+const navScrollHandler = () => {
+  topNav.classList.toggle('nav-scrolled', window.pageYOffset > 60);
+};
+window.addEventListener('scroll', navScrollHandler, { passive: true });
+navScrollHandler();
 
 // Reveal animation
 const revealObserver = new IntersectionObserver((entries) => {
