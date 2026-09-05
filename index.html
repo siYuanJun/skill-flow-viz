@@ -93,7 +93,7 @@ body {
   transition: all 0.3s;
   position: relative;
 }
-.top-nav-toggle:hover { background: rgba(45, 212, 191, 0.15); border-color: var(--accent); box-shadow: 0 0 14px var(--primary-glow); }
+.top-nav-toggle:hover { background: rgba(45, 212, 191, 0.15); border-color: var(--accent); }
 .top-nav-toggle .bar {
   display: block;
   width: 18px; height: 2px;
@@ -101,7 +101,7 @@ body {
   border-radius: 2px;
   transition: transform 0.3s ease, opacity 0.25s ease, background 0.3s;
 }
-.top-nav-toggle.open { border-color: var(--accent); box-shadow: 0 0 16px var(--primary-glow); }
+.top-nav-toggle.open { border-color: var(--accent); background: rgba(45, 212, 191, 0.08); }
 .top-nav-toggle.open .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--accent); }
 .top-nav-toggle.open .bar:nth-child(2) { opacity: 0; transform: scaleX(0.2); }
 .top-nav-toggle.open .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--accent); }
